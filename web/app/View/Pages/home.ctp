@@ -1,3 +1,10 @@
+<?php $this->assign('title', "QRapp.ly"); ?>
+
+<?php  $this->start('css'); ?>
+  <!-- Supply additional CSS here -->
+  
+<?php $this->end('css'); ?>
+
 <br>
 <div class="container-fluid">
   <div class="row-fluid">
@@ -37,5 +44,29 @@
 </div>
 
 <div id="compose_box" class="compose-box modal hide fade in"></div>
-
 <div id="move_to_selector" class="move-to-selector hide"></div>
+
+<?php $this->start('script'); ?>
+
+<!-- Supply additional javascript here -->
+<script type="text/javascript">
+  require(
+    [
+      'flight/lib/compose',
+      'flight/lib/registry',
+      'flight/lib/advice',
+      'flight/lib/logger',
+      'flight/tools/debug/debug'
+    ],
+
+    function(compose, registry, advice, withLogging, debug) {
+      debug.enable(true);
+      compose.mixin(registry, [advice.withAdvice, withLogging]);
+      require(['app/boot/page'], function(initialize) {
+        initialize();
+      });
+    }
+  );
+</script>
+
+<?php $this->end('script'); ?>
