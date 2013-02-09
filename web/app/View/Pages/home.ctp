@@ -1,4 +1,4 @@
-<?php $this->assign('title', "QRapp.ly"); ?>
+<?php $this->assign('title', "QRapp.ly - Home"); ?>
 
 <?php  $this->start('css'); ?>
   <!-- Supply additional CSS here -->
@@ -48,6 +48,7 @@
 
 <?php $this->start('script'); ?>
 
+<script type="text/javascript" src="/js/lib/jquery.qrcode.min.js"></script>
 <!-- Supply additional javascript here -->
 <script type="text/javascript">
   require(

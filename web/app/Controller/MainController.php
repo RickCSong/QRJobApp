@@ -20,6 +20,7 @@
  */
 
 App::uses('AppController', 'Controller');
+App::import('Vendor', 'phpqrcode/qrlib');
 
 /**
  * Static content controller
@@ -62,7 +63,8 @@ class MainController extends AppController {
 	}
 
 	public function test() {
-		$this->set('test', 'PINK');
+		QRcode::png('code data text', 'filename.png'); // creates file 
+		$this->set('test', 'About');
 		$this->render('/Pages/test');
 	}
 }
