@@ -1,0 +1,104 @@
+/* Setup Sidebar */
+.setup-sidebar {
+  border-right:1px 
+  solid #ccc; 
+  height: 100%;
+}
+
+.setup-list {
+  position: relative;
+  padding: 20px;
+}
+
+.setup-list>li {
+  color:#999;
+  font-size: 20px;
+  font-weight: 200;
+  margin-left: 20px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.setup-list>li.active {
+  font-weight: bold;
+  color:#26c;
+  margin-left: 10px;  
+}
+
+/* Setup Content */
+.setup-content {
+  height: 350px;
+  position: relative;
+}
+
+.setup-heading {
+
+}
+
+.setup-inactive {
+  display: none;
+}
+
+.setup-body {
+  position:relative;
+  margin-top: 30px;
+  margin-left: 50px;
+  margin-bottom: 50px;
+  /*left: 50%;*/
+}
+
+.setup-nav {
+  position: absolute;
+  bottom: 0px;
+  width: inherit;
+}
+
+#setup-prev {  
+  display: none;
+  float: left;
+  left: 0px;
+  width: 100px;
+}
+
+#setup-next {
+  margin-right: 30px;
+  float: right;
+  width: 100px;
+}
+
+#setup-finish {
+  display: none;
+  margin-right: 30px;
+  float: right;
+  width: 100px;
+}
+
+/* Controls */
+
+.control-group {
+  /*margin-left: -100px;*/
+  margin-bottom: 9px;
+}
+
+.control-group-help {
+  /*margin-left: -100px;*/
+  margin-bottom: 18px;
+}
+
+.control-help-block {
+  margin-top: -3px;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.control-label {
+  float: left;
+  width: 140px;
+  padding-top: 5px;
+  text-align: right;
+}
+
+.controls {
+  margin-left: 160px;
+  width: 500px;
+}

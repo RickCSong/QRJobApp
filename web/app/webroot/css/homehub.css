@@ -1,0 +1,87 @@
+/* Default CSS */
+html,body
+{
+	height:100%;
+}
+
+p {
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 18px;
+  margin-bottom: 9px;
+}
+
+footer {
+  position: relative;
+  width: auto;
+  height: 60px;
+  z-index: 9000;
+  overflow: hidden;
+  padding: 0;
+  background: #181818;
+  color: white;
+}
+
+footer p {
+  margin-top: 23px;
+}
+
+footer a, footer a:hover {
+  color: #EEE;
+}
+
+.wrapper {
+  position: relative;
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 0 -60px 0;
+}
+
+
+.content-block {	
+  padding-top: 60px; 
+}
+
+.push { 
+  position: relative;
+  height: 60px;
+  z-index: 9000;
+} 
+
+/* Sidebar CSS */
+
+.sidebar-nav a { 
+  color:#777;
+}
+
+.sidebar-nav button { 
+  margin-top: 5px;
+  width: 100%;
+}
+
+.sidebar-nav .nav>li>a:hover, .sidebar-nav a:hover { 
+  color:#26c;
+  background-color:#ddd;
+  border-radius:4px; 
+}
+
+.sidebar-nav li.active a:hover, .sidebar-nav li.active a {
+  color:#fff;
+  background-color:#28c;
+  border-radius:5px;
+}
+
+.sidebar-nav li.active a:after {
+  content:" ▸"
+}
+
+.sidebar-nav {
+  padding:10px;
+  border-radius:4px;
+  background-color:#eee;
+  border-right:1px solid #ccc;
+  border-bottom:1px solid #bbb;
+  border-top:1px solid #e7e7e7;
+  border-left:1px solid #e7e7e7;  
+}
