@@ -273,7 +273,11 @@ class Article extends CakeTestModel {
  *
  * @var array
  */
-	public $validate = array('user_id' => 'numeric', 'title' => array('allowEmpty' => false, 'rule' => 'notEmpty'), 'body' => 'notEmpty');
+	public $validate = array(
+		'user_id' => 'numeric',
+		'title' => array('required' => false, 'rule' => 'notEmpty'),
+		'body' => array('required' => false, 'rule' => 'notEmpty'),
+	);
 
 /**
  * beforeSaveReturn property
@@ -294,7 +298,7 @@ class Article extends CakeTestModel {
 /**
  * titleDuplicate method
  *
- * @param mixed $title
+ * @param string $title
  * @return void
  */
 	public static function titleDuplicate($title) {
@@ -548,6 +552,13 @@ class ModifiedComment extends CakeTestModel {
 	public $useTable = 'comments';
 
 /**
+ * Property used to toggle filtering of results
+ *
+ * @var boolean
+ */
+	public $remove = false;
+
+/**
  * belongsTo property
  *
  * @var array
@@ -562,6 +573,9 @@ class ModifiedComment extends CakeTestModel {
 	public function afterFind($results, $primary = false) {
 		if (isset($results[0])) {
 			$results[0]['Comment']['callback'] = 'Fire';
+		}
+		if ($this->remove) {
+			return array();
 		}
 		return $results;
 	}
@@ -959,7 +973,7 @@ class Author extends CakeTestModel {
 /**
  * afterFind method
  *
- * @param mixed $results
+ * @param array $results
  * @return void
  */
 	public function afterFind($results, $primary = false) {
@@ -986,7 +1000,7 @@ class ModifiedAuthor extends Author {
 /**
  * afterFind method
  *
- * @param mixed $results
+ * @param array $results
  * @return void
  */
 	public function afterFind($results, $primary = false) {
@@ -1208,7 +1222,7 @@ class NodeAfterFind extends CakeTestModel {
  * afterFind method
  *
  * @param mixed $results
- * @return void
+ * @return array
  */
 	public function afterFind($results, $primary = false) {
 		return $results;
@@ -1999,28 +2013,28 @@ class CallbackPostTestModel extends CakeTestModel {
 /**
  * variable to control return of beforeValidate
  *
- * @var string
+ * @var boolean
  */
 	public $beforeValidateReturn = true;
 
 /**
  * variable to control return of beforeSave
  *
- * @var string
+ * @var boolean
  */
 	public $beforeSaveReturn = true;
 
 /**
  * variable to control return of beforeDelete
  *
- * @var string
+ * @var boolean
  */
 	public $beforeDeleteReturn = true;
 
 /**
  * beforeSave callback
  *
- * @return void
+ * @return boolean
  */
 	public function beforeSave($options = array()) {
 		return $this->beforeSaveReturn;
@@ -2029,7 +2043,7 @@ class CallbackPostTestModel extends CakeTestModel {
 /**
  * beforeValidate callback
  *
- * @return void
+ * @return boolean
  */
 	public function beforeValidate($options = array()) {
 		return $this->beforeValidateReturn;
@@ -2038,7 +2052,7 @@ class CallbackPostTestModel extends CakeTestModel {
 /**
  * beforeDelete callback
  *
- * @return void
+ * @return boolean
  */
 	public function beforeDelete($cascade = true) {
 		return $this->beforeDeleteReturn;
@@ -2532,8 +2546,8 @@ class NumberTree extends CakeTestModel {
 /**
  * initialize method
  *
- * @param int $levelLimit
- * @param int $childLimit
+ * @param integer $levelLimit
+ * @param integer $childLimit
  * @param mixed $currentLevel
  * @param mixed $parent_id
  * @param string $prefix
@@ -4972,7 +4986,7 @@ class CustomArticle extends AppModel {
  * Alters title data
  *
  * @return void
- **/
+ */
 	public function beforeValidate($options = array()) {
 		$this->data[$this->alias]['title'] = 'foo';
 		if ($this->findMethods['unPublished'] === true) {

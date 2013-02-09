@@ -29,6 +29,7 @@ class_exists('AclComponent');
 class PhpAclTest extends CakeTestCase {
 
 	public function setUp() {
+		parent::setUp();
 		Configure::write('Acl.classname', 'PhpAcl');
 		$Collection = new ComponentCollection();
 		$this->PhpAcl = new PhpAcl();
@@ -58,7 +59,6 @@ class PhpAclTest extends CakeTestCase {
 	}
 
 	public function testAroResolve() {
-		$map = $this->Acl->Aro->map;
 		$this->Acl->Aro->map = array(
 			'User' => 'FooModel/nickname',
 			'Role' => 'FooModel/role',
@@ -117,7 +117,7 @@ class PhpAclTest extends CakeTestCase {
 		$this->Acl->Aro->addAlias(array('Role/25' => 'Role/IT'));
 		$this->Acl->allow('Role/IT', '/rules/debugging/*');
 
-		$this->assertEquals(array(array('Role/IT', )), $this->Acl->Aro->roles($user));
+		$this->assertEquals(array(array('Role/IT')), $this->Acl->Aro->roles($user));
 		$this->assertTrue($this->Acl->check($user, '/rules/debugging/stats/pageload'));
 		$this->assertTrue($this->Acl->check($user, '/rules/debugging/sql/queries'));
 		// Role/default is allowed users dashboard, but not Role/IT

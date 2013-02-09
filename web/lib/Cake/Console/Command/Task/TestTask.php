@@ -55,6 +55,21 @@ class TestTask extends BakeTask {
 	);
 
 /**
+ * Mapping between packages, and their baseclass + package.
+ * This is used to generate App::uses() call to autoload base
+ * classes if a developer has forgotten to do so.
+ *
+ * @var array
+ */
+	public $baseTypes = array(
+		'Model' => array('Model', 'Model'),
+		'Behavior' => array('ModelBehavior', 'Model'),
+		'Controller' => array('Controller', 'Controller'),
+		'Component' => array('Component', 'Controller'),
+		'Helper' => array('Helper', 'View')
+	);
+
+/**
  * Internal list of fixtures that have been added so far.
  *
  * @var array
@@ -68,16 +83,17 @@ class TestTask extends BakeTask {
  */
 	public function execute() {
 		parent::execute();
-		if (empty($this->args)) {
+		$count = count($this->args);
+		if (!$count) {
 			$this->_interactive();
 		}
 
-		if (count($this->args) == 1) {
+		if ($count === 1) {
 			$this->_interactive($this->args[0]);
 		}
 
-		if (count($this->args) > 1) {
-			$type = Inflector::underscore($this->args[0]);
+		if ($count > 1) {
+			$type = Inflector::classify($this->args[0]);
 			if ($this->bake($type, $this->args[1])) {
 				$this->out('<success>Done</success>');
 			}
@@ -132,6 +148,8 @@ class TestTask extends BakeTask {
 		} elseif ($this->interactive) {
 			$this->getUserFixtures();
 		}
+		list($baseClass, $baseType) = $this->getBaseType($type);
+		App::uses($baseClass, $baseType);
 		App::uses($fullClassName, $realType);
 
 		$methods = array();
@@ -139,7 +157,7 @@ class TestTask extends BakeTask {
 			$methods = $this->getTestableMethods($fullClassName);
 		}
 		$mock = $this->hasMockClass($type, $fullClassName);
-		list($preConstruct, $construction, $postConstruct) = $this->generateConstructor($type, $fullClassName);
+		list($preConstruct, $construction, $postConstruct) = $this->generateConstructor($type, $fullClassName, $plugin);
 		$uses = $this->generateUses($type, $realType, $fullClassName);
 
 		$this->out("\n" . __d('cake_console', 'Baking test case for %s %s ...', $className, $type), 1, Shell::QUIET);
@@ -241,6 +259,12 @@ class TestTask extends BakeTask {
  */
 	public function isLoadableClass($package, $class) {
 		App::uses($class, $package);
+		list($plugin, $ns) = pluginSplit($package);
+		if ($plugin) {
+			App::uses("{$plugin}AppController", $package);
+			App::uses("{$plugin}AppModel", $package);
+			App::uses("{$plugin}AppHelper", $package);
+		}
 		return class_exists($class);
 	}
 
@@ -306,6 +330,21 @@ class TestTask extends BakeTask {
 	}
 
 /**
+ * Get the base class and package name for a given type.
+ *
+ * @param string $type The type the class having a test
+ *   generated for is in.
+ * @return array Array of (class, type)
+ * @throws CakeException on invalid types.
+ */
+	public function getBaseType($type) {
+		if (empty($this->baseTypes[$type])) {
+			throw new CakeException(__d('cake_dev', 'Invalid type name'));
+		}
+		return $this->baseTypes[$type];
+	}
+
+/**
  * Get methods declared in the class given.
  * No parent methods will be returned
  *
@@ -359,7 +398,7 @@ class TestTask extends BakeTask {
 			}
 			if ($type == 'hasAndBelongsToMany') {
 				if (!empty($subject->hasAndBelongsToMany[$alias]['with'])) {
-					list($plugin, $joinModel) = pluginSplit($subject->hasAndBelongsToMany[$alias]['with']);
+					list(, $joinModel) = pluginSplit($subject->hasAndBelongsToMany[$alias]['with']);
 				} else {
 					$joinModel = Inflector::classify($subject->hasAndBelongsToMany[$alias]['joinTable']);
 				}
@@ -384,6 +423,7 @@ class TestTask extends BakeTask {
 			$models = $subject->uses;
 		}
 		foreach ($models as $model) {
+			list(, $model) = pluginSplit($model);
 			$this->_processModel($subject->{$model});
 		}
 	}
@@ -396,11 +436,10 @@ class TestTask extends BakeTask {
  * @return void
  */
 	protected function _addFixture($name) {
-		$parent = get_parent_class($name);
-		$prefix = 'app.';
-		if (strtolower($parent) != 'appmodel' && strtolower(substr($parent, -8)) == 'appmodel') {
-			$pluginName = substr($parent, 0, -8);
-			$prefix = 'plugin.' . Inflector::underscore($pluginName) . '.';
+		if ($this->plugin) {
+			$prefix = 'plugin.' . Inflector::underscore($this->plugin) . '.';
+		} else {
+			$prefix = 'app.';
 		}
 		$fixture = $prefix . Inflector::underscore($name);
 		$this->_fixtures[$name] = $fixture;
@@ -440,21 +479,17 @@ class TestTask extends BakeTask {
  *
  * @param string $type The Type of object you are generating tests for eg. controller
  * @param string $fullClassName The Classname of the class the test is being generated for.
+ * @param string $plugin The plugin name.
  * @return array Constructor snippets for the thing you are building.
  */
-	public function generateConstructor($type, $fullClassName) {
+	public function generateConstructor($type, $fullClassName, $plugin) {
 		$type = strtolower($type);
-		$pre = $post = '';
+		$pre = $construct = $post = '';
 		if ($type == 'model') {
-			$construct = "ClassRegistry::init('$fullClassName');\n";
+			$construct = "ClassRegistry::init('{$plugin}$fullClassName');\n";
 		}
 		if ($type == 'behavior') {
 			$construct = "new $fullClassName();\n";
-		}
-		if ($type == 'controller') {
-			$className = substr($fullClassName, 0, -10);
-			$construct = "new Test$fullClassName();\n";
-			$post = "\$this->{$className}->constructClasses();\n";
 		}
 		if ($type == 'helper') {
 			$pre = "\$View = new View();\n";
@@ -477,6 +512,7 @@ class TestTask extends BakeTask {
  */
 	public function generateUses($type, $realType, $className) {
 		$uses = array();
+		$type = strtolower($type);
 		if ($type == 'component') {
 			$uses[] = array('ComponentCollection', 'Controller');
 			$uses[] = array('Component', 'Controller');

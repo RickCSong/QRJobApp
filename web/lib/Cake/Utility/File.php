@@ -183,7 +183,7 @@ class File {
 /**
  * Sets or gets the offset for the currently opened file.
  *
- * @param mixed $offset The $offset in bytes to seek. If set to false then the current offset is returned.
+ * @param integer|boolean $offset The $offset in bytes to seek. If set to false then the current offset is returned.
  * @param integer $seek PHP Constant SEEK_SET | SEEK_CUR | SEEK_END determining what the $offset is relative to
  * @return mixed True on success, false on failure (set mode), false on failure or integer offset on success (get mode)
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/file-folder.html#File::offset
@@ -200,8 +200,8 @@ class File {
 	}
 
 /**
- * Prepares a ascii string for writing.  Converts line endings to the
- * correct terminator for the current platform.  If windows "\r\n" will be used
+ * Prepares a ascii string for writing. Converts line endings to the
+ * correct terminator for the current platform. If windows "\r\n" will be used
  * all other platforms will use "\n"
  *
  * @param string $data Data to prepare for writing.
@@ -302,7 +302,7 @@ class File {
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/file-folder.html#File::info
  */
 	public function info() {
-		if ($this->info == null) {
+		if (!$this->info) {
 			$this->info = pathinfo($this->path);
 		}
 		if (!isset($this->info['filename'])) {
@@ -324,7 +324,7 @@ class File {
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/file-folder.html#File::ext
  */
 	public function ext() {
-		if ($this->info == null) {
+		if (!$this->info) {
 			$this->info();
 		}
 		if (isset($this->info['extension'])) {
@@ -340,7 +340,7 @@ class File {
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/file-folder.html#File::name
  */
 	public function name() {
-		if ($this->info == null) {
+		if (!$this->info) {
 			$this->info();
 		}
 		if (isset($this->info['extension'])) {
@@ -366,13 +366,13 @@ class File {
 		if (!$ext) {
 			$ext = $this->ext();
 		}
-		return preg_replace( "/(?:[^\w\.-]+)/", "_", basename($name, $ext));
+		return preg_replace("/(?:[^\w\.-]+)/", "_", basename($name, $ext));
 	}
 
 /**
  * Get md5 Checksum of file with previous check of Filesize
  *
- * @param mixed $maxsize in MB or true to force
+ * @param integer|boolean $maxsize in MB or true to force
  * @return string md5 Checksum {@link http://php.net/md5_file See md5_file()}
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/file-folder.html#File::md5
  */
@@ -546,7 +546,7 @@ class File {
 	}
 
 /**
- * Get the mime type of the file.  Uses the finfo extension if 
+ * Get the mime type of the file. Uses the finfo extension if
  * its available, otherwise falls back to mime_content_type
  *
  * @return false|string The mimetype of the file, or false if reading fails.

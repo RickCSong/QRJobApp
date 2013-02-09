@@ -76,7 +76,7 @@ class TestShellDispatcher extends ShellDispatcher {
 /**
  * getShell
  *
- * @param mixed $shell
+ * @param string $shell
  * @return mixed
  */
 	public function getShell($shell) {
@@ -86,7 +86,7 @@ class TestShellDispatcher extends ShellDispatcher {
 /**
  * _getShell
  *
- * @param mixed $plugin
+ * @param string $plugin
  * @return mixed
  */
 	protected function _getShell($shell) {
@@ -564,7 +564,7 @@ class ShellDispatcherTest extends CakeTestCase {
 		$this->assertEquals('a', $Dispatcher->shiftArgs());
 		$this->assertSame($Dispatcher->args, array('b' => 'c', 'd'));
 
-		$Dispatcher->args = array(0 => 'a',  2 => 'b', 30 => 'c');
+		$Dispatcher->args = array(0 => 'a', 2 => 'b', 30 => 'c');
 		$this->assertEquals('a', $Dispatcher->shiftArgs());
 		$this->assertSame($Dispatcher->args, array(0 => 'b', 1 => 'c'));
 

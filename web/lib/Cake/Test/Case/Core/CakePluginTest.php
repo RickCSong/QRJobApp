@@ -31,6 +31,7 @@ class CakePluginTest extends CakeTestCase {
  * @return void
  */
 	public function setUp() {
+		parent::setUp();
 		App::build(array(
 			'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS)
 		), App::RESET);
@@ -43,9 +44,8 @@ class CakePluginTest extends CakeTestCase {
  * @return void
  */
 	public function tearDown() {
-		App::build();
+		parent::tearDown();
 		CakePlugin::unload();
-		Configure::delete('CakePluginTest');
 	}
 
 /**
@@ -176,6 +176,20 @@ class CakePluginTest extends CakeTestCase {
  */
 	public function testLoadMultipleWithDefaultsMissingFile() {
 		CakePlugin::load(array('TestPlugin', 'TestPluginTwo'), array('bootstrap' => true, 'routes' => true));
+		CakePlugin::routes();
+	}
+
+/**
+ * Test ignoring missing bootstrap/routes file
+ *
+ * @return void
+ */
+	public function testIgnoreMissingFiles() {
+		CakePlugin::loadAll(array(array(
+			'bootstrap' => true,
+			'routes' => true,
+			'ignoreMissing' => true
+		)));
 		CakePlugin::routes();
 	}
 

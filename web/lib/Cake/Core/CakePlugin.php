@@ -18,7 +18,7 @@
  */
 
 /**
- * CakePlugin is responsible for loading and unloading plugins. It also can 
+ * CakePlugin is responsible for loading and unloading plugins. It also can
  * retrieve plugin paths and load their bootstrap and routes files.
  *
  * @package       Cake.Core
@@ -61,7 +61,7 @@ class CakePlugin {
  *
  * Will only load the bootstrap for ApiGenerator and only the routes for DebugKit
  *
- * @param mixed $plugin name of the plugin to be loaded in CamelCase format or array or plugins to load
+ * @param string|array $plugin name of the plugin to be loaded in CamelCase format or array or plugins to load
  * @param array $config configuration options for the plugin
  * @throws MissingPluginException if the folder for the plugin to be loaded is not found
  * @return void
@@ -74,7 +74,7 @@ class CakePlugin {
 			}
 			return;
 		}
-		$config += array('bootstrap' => false, 'routes' => false);
+		$config += array('bootstrap' => false, 'routes' => false, 'ignoreMissing' => false);
 		if (empty($config['path'])) {
 			foreach (App::path('plugins') as $path) {
 				if (is_dir($path . $plugin)) {
@@ -162,12 +162,18 @@ class CakePlugin {
 
 		$path = self::path($plugin);
 		if ($config['bootstrap'] === true) {
-			return include $path . 'Config' . DS . 'bootstrap.php';
+			return self::_includeFile(
+				$path . 'Config' . DS . 'bootstrap.php',
+				$config['ignoreMissing']
+			);
 		}
 
 		$bootstrap = (array)$config['bootstrap'];
 		foreach ($bootstrap as $file) {
-			include $path . 'Config' . DS . $file . '.php';
+			self::_includeFile(
+				$path . 'Config' . DS . $file . '.php',
+				$config['ignoreMissing']
+			);
 		}
 
 		return true;
@@ -191,7 +197,10 @@ class CakePlugin {
 		if ($config['routes'] === false) {
 			return false;
 		}
-		return (bool)include self::path($plugin) . 'Config' . DS . 'routes.php';
+		return (bool)self::_includeFile(
+			self::path($plugin) . 'Config' . DS . 'routes.php',
+			$config['ignoreMissing']
+		);
 	}
 
 /**
@@ -223,6 +232,20 @@ class CakePlugin {
 		} else {
 			unset(self::$_plugins[$plugin]);
 		}
+	}
+
+/**
+ * Include file, ignoring include error if needed if file is missing
+ *
+ * @param string $file File to include
+ * @param boolean $ignoreMissing Whether to ignore include error for missing files
+ * @return mixed
+ */
+	protected static function _includeFile($file, $ignoreMissing = false) {
+		if ($ignoreMissing && !is_file($file)) {
+			return false;
+		}
+		return include $file;
 	}
 
 }

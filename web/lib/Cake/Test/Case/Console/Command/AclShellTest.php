@@ -17,6 +17,8 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+App::uses('ConsoleOutput', 'Console');
+App::uses('ConsoleInput', 'Console');
 App::uses('ShellDispatcher', 'Console');
 App::uses('Shell', 'Console');
 App::uses('AclShell', 'Console/Command');
@@ -113,6 +115,7 @@ class AclShellTest extends CakeTestCase {
 	public function testParsingModelAndForeignKey() {
 		$result = $this->Task->parseIdentifier('Model.foreignKey');
 		$expected = array('model' => 'Model', 'foreign_key' => 'foreignKey');
+		$this->assertEquals($expected, $result);
 
 		$result = $this->Task->parseIdentifier('mySuperUser');
 		$this->assertEquals('mySuperUser', $result);
@@ -175,7 +178,7 @@ class AclShellTest extends CakeTestCase {
 
 		$Aro = ClassRegistry::init('Aro');
 		$result = $Aro->findById(3);
-		$this->assertFalse($result);
+		$this->assertSame(array(), $result);
 	}
 
 /**

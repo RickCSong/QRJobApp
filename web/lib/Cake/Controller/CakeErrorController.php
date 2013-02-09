@@ -19,6 +19,8 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+App::uses('AppController', 'Controller');
+
 /**
  * Error Handling Controller
  *
@@ -50,30 +52,19 @@ class CakeErrorController extends AppController {
  */
 	public function __construct($request = null, $response = null) {
 		parent::__construct($request, $response);
-		if (count(Router::extensions())) {
-			$this->components[] = 'RequestHandler';
-		}
 		$this->constructClasses();
-		$this->startupProcess();
-
+		if (count(Router::extensions()) &&
+			!$this->Components->attached('RequestHandler')
+		) {
+			$this->RequestHandler = $this->Components->load('RequestHandler');
+		}
+		if ($this->Components->enabled('Auth')) {
+			$this->Components->disable('Auth');
+		}
+		if ($this->Components->enabled('Security')) {
+			$this->Components->disable('Security');
+		}
 		$this->_set(array('cacheAction' => false, 'viewPath' => 'Errors'));
-		if (isset($this->RequestHandler)) {
-			$this->RequestHandler->startup($this);
-		}
-	}
-
-/**
- * Escapes the viewVars.
- *
- * @return void
- */
-	public function beforeRender() {
-		parent::beforeRender();
-		foreach ($this->viewVars as $key => $value) {
-			if (!is_object($value)) {
-				$this->viewVars[$key] = h($value);
-			}
-		}
 	}
 
 }

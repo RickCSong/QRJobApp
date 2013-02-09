@@ -96,7 +96,7 @@ class DatabaseSessionTest extends CakeTestCase {
  */
 	public function testConstructionSettings() {
 		ClassRegistry::flush();
-		$storage = new DatabaseSession();
+		new DatabaseSession();
 
 		$session = ClassRegistry::getObject('session');
 		$this->assertInstanceOf('SessionTestModel', $session);
@@ -125,10 +125,14 @@ class DatabaseSessionTest extends CakeTestCase {
 			'Session' => array(
 				'id' => 'foo',
 				'data' => 'Some value',
-				'expires' => time() + (Configure::read('Session.timeout') * 60)
 			)
 		);
+		$expires = $result['Session']['expires'];
+		unset($result['Session']['expires']);
 		$this->assertEquals($expected, $result);
+
+		$expected = time() + (Configure::read('Session.timeout') * 60);
+		$this->assertWithinMargin($expires, $expected, 1);
 	}
 
 /**

@@ -159,9 +159,19 @@ class HelperTestPostsTag extends Model {
 class TestHelper extends Helper {
 
 /**
+ * Settings for this helper.
+ *
+ * @var array
+ */
+	public $settings = array(
+		'key1' => 'val1',
+		'key2' => array('key2.1' => 'val2.1', 'key2.2' => 'val2.2')
+	);
+
+/**
  * Helpers for this helper.
  *
- * @var string
+ * @var array
  */
 	public $helpers = array('Html', 'TestPlugin.OtherHelper');
 
@@ -262,6 +272,24 @@ class HelperTest extends CakeTestCase {
 				'min'
 			)
 		);
+	}
+
+/**
+ * Test settings merging
+ *
+ * @return void
+ */
+	public function testSettingsMerging() {
+		$Helper = new TestHelper($this->View, array(
+			'key3' => 'val3',
+			'key2' => array('key2.2' => 'newval')
+		));
+		$expected = array(
+			'key1' => 'val1',
+			'key2' => array('key2.1' => 'val2.1', 'key2.2' => 'newval'),
+			'key3' => 'val3'
+		);
+		$this->assertEquals($expected, $Helper->settings);
 	}
 
 /**
@@ -528,7 +556,7 @@ class HelperTest extends CakeTestCase {
 	}
 
 /**
- * Ensure HTML escaping of url params.  So link addresses are valid and not exploited
+ * Ensure HTML escaping of url params. So link addresses are valid and not exploited
  *
  * @return void
  */
@@ -620,7 +648,10 @@ class HelperTest extends CakeTestCase {
 		$this->assertEquals(FULL_BASE_URL . '/foo.jpg', $result);
 
 		$result = $this->Helper->assetUrl('style', array('ext' => '.css'));
-		$this->assertEqual('style.css', $result);
+		$this->assertEquals('style.css', $result);
+
+		$result = $this->Helper->assetUrl('dir/sub dir/my image', array('ext' => '.jpg'));
+		$this->assertEquals('dir/sub%20dir/my%20image.jpg', $result);
 
 		$result = $this->Helper->assetUrl('foo.jpg?one=two&three=four');
 		$this->assertEquals('foo.jpg?one=two&amp;three=four', $result);
@@ -636,10 +667,10 @@ class HelperTest extends CakeTestCase {
 		CakePlugin::load('TestPlugin');
 
 		$result = $this->Helper->assetUrl('TestPlugin.style', array('ext' => '.css'));
-		$this->assertEqual('test_plugin/style.css', $result);
+		$this->assertEquals('test_plugin/style.css', $result);
 
 		$result = $this->Helper->assetUrl('TestPlugin.style', array('ext' => '.css', 'plugin' => false));
-		$this->assertEqual('TestPlugin.style.css', $result);
+		$this->assertEquals('TestPlugin.style.css', $result);
 
 		CakePlugin::unload('TestPlugin');
 	}

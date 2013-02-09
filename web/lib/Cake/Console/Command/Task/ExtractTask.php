@@ -19,6 +19,7 @@
 App::uses('AppShell', 'Console/Command');
 App::uses('File', 'Utility');
 App::uses('Folder', 'Utility');
+App::uses('Hash', 'Utility');
 
 /**
  * Language string extractor
@@ -105,6 +106,13 @@ class ExtractTask extends AppShell {
 	protected $_validationDomain = 'default';
 
 /**
+ * Holds whether this call should extract the CakePHP Lib messages
+ *
+ * @var boolean
+ */
+	protected $_extractCore = false;
+
+/**
  * Method to interact with the User and get path selections.
  *
  * @return void
@@ -136,6 +144,7 @@ class ExtractTask extends AppShell {
 			$this->out();
 		}
 	}
+
 /**
  * Execution method always used for tasks
  *
@@ -159,6 +168,21 @@ class ExtractTask extends AppShell {
 			$this->params['plugin'] = $plugin;
 		} else {
 			$this->_getPaths();
+		}
+
+		if (isset($this->params['extract-core'])) {
+			$this->_extractCore = !(strtolower($this->params['extract-core']) === 'no');
+		} else {
+			$response = $this->in(__d('cake_console', 'Would you like to extract the messages from the CakePHP core?'), array('y', 'n'), 'n');
+			$this->_extractCore = strtolower($response) === 'y';
+		}
+
+		if ($this->_extractCore) {
+			$this->_paths[] = CAKE;
+			$this->_exclude = array_merge($this->_exclude, array(
+				CAKE . 'Test',
+				CAKE . 'Console' . DS . 'Templates'
+			));
 		}
 
 		if (!empty($this->params['exclude-plugins']) && $this->_isExtractingApp()) {
@@ -221,7 +245,7 @@ class ExtractTask extends AppShell {
 		if (empty($this->_translations[$domain][$msgid])) {
 			$this->_translations[$domain][$msgid] = array(
 				'msgid_plural' => false
-			 );
+			);
 		}
 
 		if (isset($details['msgid_plural'])) {
@@ -301,6 +325,15 @@ class ExtractTask extends AppShell {
 			->addOption('exclude', array(
 				'help' => __d('cake_console', 'Comma separated list of directories to exclude.' .
 					' Any path containing a path segment with the provided values will be skipped. E.g. test,vendors')
+			))
+			->addOption('overwrite', array(
+				'boolean' => true,
+				'default' => false,
+				'help' => __d('cake_console', 'Always overwrite existing .pot files.')
+			))
+			->addOption('extract-core', array(
+				'help' => __d('cake_console', 'Extract messages from the CakePHP core libs.'),
+				'choices' => array('yes', 'no')
 			));
 	}
 
@@ -358,7 +391,7 @@ class ExtractTask extends AppShell {
 				$position = $count;
 				$depth = 0;
 
-				while ($depth == 0) {
+				while (!$depth) {
 					if ($this->_tokens[$position] == '(') {
 						$depth++;
 					} elseif ($this->_tokens[$position] == ')') {
@@ -446,8 +479,8 @@ class ExtractTask extends AppShell {
 			return;
 		}
 
-		$dims = Set::countDim($rules);
-		if ($dims == 1 || ($dims == 2 && isset($rules['message']))) {
+		$dims = Hash::dimensions($rules);
+		if ($dims === 1 || ($dims === 2 && isset($rules['message']))) {
 			$rules = array($rules);
 		}
 
@@ -490,7 +523,7 @@ class ExtractTask extends AppShell {
 					$occurrences[] = $file . ':' . implode(';', $lines);
 				}
 				$occurrences = implode("\n#: ", $occurrences);
-				$header = '#: ' . str_replace($paths, '', $occurrences) . "\n";
+				$header = '#: ' . str_replace(DS, '/', str_replace($paths, '', $occurrences)) . "\n";
 
 				if ($plural === false) {
 					$sentence = "msgid \"{$msgid}\"\n";
@@ -536,6 +569,10 @@ class ExtractTask extends AppShell {
  */
 	protected function _writeFiles() {
 		$overwriteAll = false;
+		if (!empty($this->params['overwrite'])) {
+			$overwriteAll = true;
+		}
+
 		foreach ($this->_storage as $domain => $sentences) {
 			$output = $this->_writeHeader();
 			foreach ($sentences as $sentence => $header) {
@@ -554,7 +591,7 @@ class ExtractTask extends AppShell {
 				);
 				if (strtoupper($response) === 'N') {
 					$response = '';
-					while ($response == '') {
+					while (!$response) {
 						$response = $this->in(__d('cake_console', "What would you like to name this file?"), null, 'new_' . $filename);
 						$File = new File($this->_output . $response);
 						$filename = $response;
@@ -574,7 +611,7 @@ class ExtractTask extends AppShell {
  * @return string Translation template header
  */
 	protected function _writeHeader() {
-		$output  = "# LANGUAGE translation of CakePHP Application\n";
+		$output = "# LANGUAGE translation of CakePHP Application\n";
 		$output .= "# Copyright YEAR NAME <EMAIL@ADDRESS>\n";
 		$output .= "#\n";
 		$output .= "#, fuzzy\n";

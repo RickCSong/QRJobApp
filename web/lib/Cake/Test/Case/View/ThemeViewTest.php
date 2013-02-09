@@ -43,10 +43,11 @@ class ThemePosts2Controller extends Controller {
  * @return void
  */
 	public function index() {
-		$this->set('testData', 'Some test data');
-		$test2 = 'more data';
-		$test3 = 'even more data';
-		$this->set(compact('test2', 'test3'));
+		$this->set(array(
+			'testData' => 'Some test data',
+			'test2' => 'more data',
+			'test3' => 'even more data',
+		));
 	}
 
 }
@@ -61,7 +62,7 @@ class TestTheme2View extends ThemeView {
 /**
  * renderElement method
  *
- * @param mixed $name
+ * @param string $name
  * @param array $params
  * @return void
  */
@@ -72,7 +73,7 @@ class TestTheme2View extends ThemeView {
 /**
  * getViewFileName method
  *
- * @param mixed $name
+ * @param string $name
  * @return void
  */
 	public function getViewFileName($name = null) {
@@ -82,7 +83,7 @@ class TestTheme2View extends ThemeView {
 /**
  * getLayoutFileName method
  *
- * @param mixed $name
+ * @param string $name
  * @return void
  */
 	public function getLayoutFileName($name = null) {
@@ -212,7 +213,7 @@ class ThemeViewTest extends CakeTestCase {
 
 		$View = new TestTheme2View($this->Controller);
 		ob_start();
-		$result = $View->getViewFileName('does_not_exist');
+		$View->getViewFileName('does_not_exist');
 		$expected = ob_get_clean();
 		$this->assertRegExp("/PagesController::/", $expected);
 		$this->assertRegExp("/views(\/|\\\)themed(\/|\\\)my_theme(\/|\\\)pages(\/|\\\)does_not_exist.ctp/", $expected);
@@ -233,7 +234,7 @@ class ThemeViewTest extends CakeTestCase {
 
 		$View = new TestTheme2View($this->Controller);
 		ob_start();
-		$result = $View->getLayoutFileName();
+		$View->getLayoutFileName();
 		$expected = ob_get_clean();
 		$this->assertRegExp("/Missing Layout/", $expected);
 		$this->assertRegExp("/views(\/|\\\)themed(\/|\\\)my_theme(\/|\\\)layouts(\/|\\\)whatever.ctp/", $expected);

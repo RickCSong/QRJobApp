@@ -18,10 +18,11 @@
  * @since         CakePHP(tm) v 1.2.0.5669
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+App::uses('ModelBehavior', 'Model');
 
 /**
- * Behavior to allow for dynamic and atomic manipulation of a Model's associations 
- * used for a find call. Most useful for limiting the amount of associations and 
+ * Behavior to allow for dynamic and atomic manipulation of a Model's associations
+ * used for a find call. Most useful for limiting the amount of associations and
  * data returned.
  *
  * @package       Cake.Model.Behavior
@@ -91,22 +92,24 @@ class ContainableBehavior extends ModelBehavior {
  */
 	public function beforeFind(Model $Model, $query) {
 		$reset = (isset($query['reset']) ? $query['reset'] : true);
-		$noContain = (
-			(isset($this->runtime[$Model->alias]['contain']) && empty($this->runtime[$Model->alias]['contain'])) ||
-			(isset($query['contain']) && empty($query['contain']))
-		);
+		$noContain = false;
 		$contain = array();
+
 		if (isset($this->runtime[$Model->alias]['contain'])) {
+			$noContain = empty($this->runtime[$Model->alias]['contain']);
 			$contain = $this->runtime[$Model->alias]['contain'];
 			unset($this->runtime[$Model->alias]['contain']);
 		}
+
 		if (isset($query['contain'])) {
-			$contain = array_merge($contain, (array)$query['contain']);
+			$noContain = $noContain || empty($query['contain']);
+			if ($query['contain'] !== false) {
+				$contain = array_merge($contain, (array)$query['contain']);
+			}
 		}
-		if (
-			$noContain || !$contain || in_array($contain, array(null, false), true) ||
-			(isset($contain[0]) && $contain[0] === null)
-		) {
+		$noContain = $noContain && empty($contain);
+
+		if ($noContain || empty($contain)) {
 			if ($noContain) {
 				$query['recursive'] = -1;
 			}
@@ -121,7 +124,7 @@ class ContainableBehavior extends ModelBehavior {
 		$map = $this->containmentsMap($containments);
 
 		$mandatory = array();
-		foreach ($containments['models'] as $name => $model) {
+		foreach ($containments['models'] as $model) {
 			$instance = $model['instance'];
 			$needed = $this->fieldDependencies($instance, $map, false);
 			if (!empty($needed)) {
@@ -170,7 +173,7 @@ class ContainableBehavior extends ModelBehavior {
 		}
 
 		if ($this->settings[$Model->alias]['recursive']) {
-			$query['recursive'] = (isset($query['recursive'])) ? $query['recursive'] : $containments['depth'];
+			$query['recursive'] = (isset($query['recursive'])) ? max($query['recursive'], $containments['depth']) : $containments['depth'];
 		}
 
 		$autoFields = ($this->settings[$Model->alias]['autoFields']
@@ -321,7 +324,7 @@ class ContainableBehavior extends ModelBehavior {
 					$key = $option;
 					$optionKey = true;
 					if (!empty($newChildren)) {
-						$children = Set::merge($children, $newChildren);
+						$children = Hash::merge($children, $newChildren);
 					}
 				}
 				if ($optionKey && isset($children[$key])) {
@@ -362,7 +365,7 @@ class ContainableBehavior extends ModelBehavior {
  *
  * @param Model $Model Model
  * @param array $map Map of relations for given model
- * @param mixed $fields If array, fields to initially load, if false use $Model as primary model
+ * @param array|boolean $fields If array, fields to initially load, if false use $Model as primary model
  * @return array Fields
  */
 	public function fieldDependencies(Model $Model, $map, $fields = array()) {

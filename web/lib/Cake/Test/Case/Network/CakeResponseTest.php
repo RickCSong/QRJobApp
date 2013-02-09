@@ -118,8 +118,9 @@ class CakeResponseTest extends CakeTestCase {
 		$this->assertEquals('application/vnd.wap.xhtml+xml', $response->type('xhtml-mobile'));
 		$this->assertEquals('text/csv', $response->type('csv'));
 
-		$response->type(array('keynote' => 'application/keynote'));
+		$response->type(array('keynote' => 'application/keynote', 'bat' => 'application/bat'));
 		$this->assertEquals('application/keynote', $response->type('keynote'));
+		$this->assertEquals('application/bat', $response->type('bat'));
 
 		$this->assertFalse($response->type('wackytype'));
 	}
@@ -195,31 +196,27 @@ class CakeResponseTest extends CakeTestCase {
 	}
 
 /**
- * Tests the send method and changing the content type
+ * Data provider for content type tests.
  *
+ * @return array
  */
-	public function testSendChangingContentYype() {
-		$response = $this->getMock('CakeResponse', array('_sendHeader', '_sendContent', '_setCookies'));
-		$response->type('mp3');
-		$response->body('the response body');
-		$response->expects($this->once())->method('_sendContent')->with('the response body');
-		$response->expects($this->at(0))->method('_setCookies');
-		$response->expects($this->at(1))
-			->method('_sendHeader')->with('HTTP/1.1 200 OK');
-		$response->expects($this->at(2))
-			->method('_sendHeader')->with('Content-Length', 17);
-		$response->expects($this->at(3))
-			->method('_sendHeader')->with('Content-Type', 'audio/mpeg');
-		$response->send();
+	public static function charsetTypeProvider() {
+		return array(
+			array('mp3', 'audio/mpeg'),
+			array('js', 'application/javascript; charset=UTF-8'),
+			array('json', 'application/json; charset=UTF-8'),
+			array('xml', 'application/xml; charset=UTF-8'),
+			array('txt', 'text/plain; charset=UTF-8'),
+		);
 	}
 
 /**
  * Tests the send method and changing the content type
- *
+ * @dataProvider charsetTypeProvider
  */
-	public function testSendChangingContentType() {
+	public function testSendChangingContentType($original, $expected) {
 		$response = $this->getMock('CakeResponse', array('_sendHeader', '_sendContent', '_setCookies'));
-		$response->type('mp3');
+		$response->type($original);
 		$response->body('the response body');
 		$response->expects($this->once())->method('_sendContent')->with('the response body');
 		$response->expects($this->at(0))->method('_setCookies');
@@ -228,7 +225,28 @@ class CakeResponseTest extends CakeTestCase {
 		$response->expects($this->at(2))
 			->method('_sendHeader')->with('Content-Length', 17);
 		$response->expects($this->at(3))
-			->method('_sendHeader')->with('Content-Type', 'audio/mpeg');
+			->method('_sendHeader')->with('Content-Type', $expected);
+		$response->send();
+	}
+
+/**
+ * Tests the send method and changing the content type to JS without adding the charset
+ *
+ */
+	public function testSendChangingContentTypeWithoutCharset() {
+		$response = $this->getMock('CakeResponse', array('_sendHeader', '_sendContent', '_setCookies'));
+		$response->type('js');
+		$response->charset('');
+
+		$response->body('var $foo = "bar";');
+		$response->expects($this->once())->method('_sendContent')->with('var $foo = "bar";');
+		$response->expects($this->at(0))->method('_setCookies');
+		$response->expects($this->at(1))
+			->method('_sendHeader')->with('HTTP/1.1 200 OK');
+		$response->expects($this->at(2))
+			->method('_sendHeader')->with('Content-Length', 17);
+		$response->expects($this->at(3))
+			->method('_sendHeader')->with('Content-Type', 'application/javascript');
 		$response->send();
 	}
 
@@ -830,7 +848,7 @@ class CakeResponseTest extends CakeTestCase {
  * Test checkNotModified method
  *
  * @return void
- **/
+ */
 	public function testCheckNotModifiedByEtagStar() {
 		$_SERVER['HTTP_IF_NONE_MATCH'] = '*';
 		$response = $this->getMock('CakeResponse', array('notModified'));
@@ -843,7 +861,7 @@ class CakeResponseTest extends CakeTestCase {
  * Test checkNotModified method
  *
  * @return void
- **/
+ */
 	public function testCheckNotModifiedByEtagExact() {
 		$_SERVER['HTTP_IF_NONE_MATCH'] = 'W/"something", "other"';
 		$response = $this->getMock('CakeResponse', array('notModified'));
@@ -856,7 +874,7 @@ class CakeResponseTest extends CakeTestCase {
  * Test checkNotModified method
  *
  * @return void
- **/
+ */
 	public function testCheckNotModifiedByEtagAndTime() {
 		$_SERVER['HTTP_IF_NONE_MATCH'] = 'W/"something", "other"';
 		$_SERVER['HTTP_IF_MODIFIED_SINCE'] = '2012-01-01 00:00:00';
@@ -871,7 +889,7 @@ class CakeResponseTest extends CakeTestCase {
  * Test checkNotModified method
  *
  * @return void
- **/
+ */
 	public function testCheckNotModifiedByEtagAndTimeMismatch() {
 		$_SERVER['HTTP_IF_NONE_MATCH'] = 'W/"something", "other"';
 		$_SERVER['HTTP_IF_MODIFIED_SINCE'] = '2012-01-01 00:00:00';
@@ -886,7 +904,7 @@ class CakeResponseTest extends CakeTestCase {
  * Test checkNotModified method
  *
  * @return void
- **/
+ */
 	public function testCheckNotModifiedByEtagMismatch() {
 		$_SERVER['HTTP_IF_NONE_MATCH'] = 'W/"something-else", "other"';
 		$_SERVER['HTTP_IF_MODIFIED_SINCE'] = '2012-01-01 00:00:00';
@@ -901,7 +919,7 @@ class CakeResponseTest extends CakeTestCase {
  * Test checkNotModified method
  *
  * @return void
- **/
+ */
 	public function testCheckNotModifiedByTime() {
 		$_SERVER['HTTP_IF_MODIFIED_SINCE'] = '2012-01-01 00:00:00';
 		$response = $this->getMock('CakeResponse', array('notModified'));
@@ -914,7 +932,7 @@ class CakeResponseTest extends CakeTestCase {
  * Test checkNotModified method
  *
  * @return void
- **/
+ */
 	public function testCheckNotModifiedNoHints() {
 		$_SERVER['HTTP_IF_NONE_MATCH'] = 'W/"something", "other"';
 		$_SERVER['HTTP_IF_MODIFIED_SINCE'] = '2012-01-01 00:00:00';
@@ -925,7 +943,7 @@ class CakeResponseTest extends CakeTestCase {
 
 /**
  * Test cookie setting
- * 
+ *
  * @return void
  */
 	public function testCookieSettings() {
@@ -943,7 +961,7 @@ class CakeResponseTest extends CakeTestCase {
 			'secure' => false,
 			'httpOnly' => false);
 		$result = $response->cookie('CakeTestCookie[Testing]');
-		$this->assertEqual($result, $expected);
+		$this->assertEquals($expected, $result);
 
 		$cookie = array(
 			'name' => 'CakeTestCookie[Testing2]',
@@ -975,7 +993,7 @@ class CakeResponseTest extends CakeTestCase {
 		);
 
 		$result = $response->cookie();
-		$this->assertEqual($result, $expected);
+		$this->assertEquals($expected, $result);
 
 		$cookie = $expected['CakeTestCookie[Testing]'];
 		$cookie['value'] = 'test';
@@ -1002,7 +1020,366 @@ class CakeResponseTest extends CakeTestCase {
 		);
 
 		$result = $response->cookie();
-		$this->assertEqual($result, $expected);
+		$this->assertEquals($expected, $result);
+	}
+
+/**
+ * testFileNotFound
+ *
+ * @expectedException NotFoundException
+ * @return void
+ */
+	public function testFileNotFound() {
+		$response = new CakeResponse();
+		$response->file('/some/missing/folder/file.jpg');
+	}
+
+/**
+ * testFile method
+ *
+ * @return void
+ */
+	public function testFile() {
+		$response = $this->getMock('CakeResponse', array(
+			'header',
+			'type',
+			'_sendHeader',
+			'_setContentType',
+			'_isActive',
+			'_clearBuffer',
+			'_flushBuffer'
+		));
+
+		$response->expects($this->exactly(1))
+			->method('type')
+			->with('css')
+			->will($this->returnArgument(0));
+
+		$response->expects($this->at(1))
+			->method('header')
+			->with('Content-Length', 38);
+
+		$response->expects($this->once())->method('_clearBuffer');
+		$response->expects($this->once())->method('_flushBuffer');
+
+		$response->expects($this->exactly(1))
+			->method('_isActive')
+			->will($this->returnValue(true));
+
+		$response->file(CAKE . 'Test' . DS . 'test_app' . DS . 'Vendor' . DS . 'css' . DS . 'test_asset.css');
+
+		ob_start();
+		$result = $response->send();
+		$output = ob_get_clean();
+		$this->assertEquals("/* this is the test asset css file */\n", $output);
+		$this->assertTrue($result !== false);
+	}
+
+/**
+ * testFileWithUnknownFileTypeGeneric method
+ *
+ * @return void
+ */
+	public function testFileWithUnknownFileTypeGeneric() {
+		$currentUserAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
+		$_SERVER['HTTP_USER_AGENT'] = 'Some generic browser';
+
+		$response = $this->getMock('CakeResponse', array(
+			'header',
+			'type',
+			'download',
+			'_sendHeader',
+			'_setContentType',
+			'_isActive',
+			'_clearBuffer',
+			'_flushBuffer'
+		));
+
+		$response->expects($this->exactly(1))
+			->method('type')
+			->with('ini')
+			->will($this->returnValue(false));
+
+		$response->expects($this->once())
+			->method('download')
+			->with('no_section.ini');
+
+		$response->expects($this->at(2))
+			->method('header')
+			->with('Accept-Ranges', 'bytes');
+
+		$response->expects($this->at(3))
+			->method('header')
+			->with('Content-Length', 35);
+
+		$response->expects($this->once())->method('_clearBuffer');
+		$response->expects($this->once())->method('_flushBuffer');
+
+		$response->expects($this->exactly(1))
+			->method('_isActive')
+			->will($this->returnValue(true));
+
+		$response->file(CAKE . 'Test' . DS . 'test_app' . DS . 'Config' . DS . 'no_section.ini');
+
+		ob_start();
+		$result = $response->send();
+		$output = ob_get_clean();
+		$this->assertEquals("some_key = some_value\nbool_key = 1\n", $output);
+		$this->assertTrue($result !== false);
+		if ($currentUserAgent !== null) {
+			$_SERVER['HTTP_USER_AGENT'] = $currentUserAgent;
+		}
+	}
+
+/**
+ * testFileWithUnknownFileTypeOpera method
+ *
+ * @return void
+ */
+	public function testFileWithUnknownFileTypeOpera() {
+		$currentUserAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
+		$_SERVER['HTTP_USER_AGENT'] = 'Opera/9.80 (Windows NT 6.0; U; en) Presto/2.8.99 Version/11.10';
+
+		$response = $this->getMock('CakeResponse', array(
+			'header',
+			'type',
+			'download',
+			'_sendHeader',
+			'_setContentType',
+			'_isActive',
+			'_clearBuffer',
+			'_flushBuffer'
+		));
+
+		$response->expects($this->at(0))
+			->method('type')
+			->with('ini')
+			->will($this->returnValue(false));
+
+		$response->expects($this->at(1))
+			->method('type')
+			->with('application/octetstream')
+			->will($this->returnValue(false));
+
+		$response->expects($this->once())
+			->method('download')
+			->with('no_section.ini');
+
+		$response->expects($this->at(3))
+			->method('header')
+			->with('Accept-Ranges', 'bytes');
+
+		$response->expects($this->at(4))
+			->method('header')
+			->with('Content-Length', 35);
+
+		$response->expects($this->once())->method('_clearBuffer');
+		$response->expects($this->once())->method('_flushBuffer');
+		$response->expects($this->exactly(1))
+			->method('_isActive')
+			->will($this->returnValue(true));
+
+		$response->file(CAKE . 'Test' . DS . 'test_app' . DS . 'Config' . DS . 'no_section.ini');
+
+		ob_start();
+		$result = $response->send();
+		$output = ob_get_clean();
+		$this->assertEquals("some_key = some_value\nbool_key = 1\n", $output);
+		$this->assertTrue($result !== false);
+		if ($currentUserAgent !== null) {
+			$_SERVER['HTTP_USER_AGENT'] = $currentUserAgent;
+		}
+	}
+
+/**
+ * testFileWithUnknownFileTypeIE method
+ *
+ * @return void
+ */
+	public function testFileWithUnknownFileTypeIE() {
+		$currentUserAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 5.2; Trident/4.0; Media Center PC 4.0; SLCC1; .NET CLR 3.0.04320)';
+
+		$response = $this->getMock('CakeResponse', array(
+			'header',
+			'type',
+			'download',
+			'_sendHeader',
+			'_setContentType',
+			'_isActive',
+			'_clearBuffer',
+			'_flushBuffer'
+		));
+
+		$response->expects($this->at(0))
+			->method('type')
+			->with('ini')
+			->will($this->returnValue(false));
+
+		$response->expects($this->at(1))
+			->method('type')
+			->with('application/force-download')
+			->will($this->returnValue(false));
+
+		$response->expects($this->once())
+			->method('download')
+			->with('config.ini');
+
+		$response->expects($this->at(3))
+			->method('header')
+			->with('Accept-Ranges', 'bytes');
+
+		$response->expects($this->at(4))
+			->method('header')
+			->with('Content-Length', 35);
+
+		$response->expects($this->once())->method('_clearBuffer');
+		$response->expects($this->once())->method('_flushBuffer');
+		$response->expects($this->exactly(1))
+			->method('_isActive')
+			->will($this->returnValue(true));
+
+		$response->file(CAKE . 'Test' . DS . 'test_app' . DS . 'Config' . DS . 'no_section.ini', array(
+			'name' => 'config.ini'
+		));
+
+		ob_start();
+		$result = $response->send();
+		$output = ob_get_clean();
+		$this->assertEquals("some_key = some_value\nbool_key = 1\n", $output);
+		$this->assertTrue($result !== false);
+		if ($currentUserAgent !== null) {
+			$_SERVER['HTTP_USER_AGENT'] = $currentUserAgent;
+		}
+	}
+/**
+ * testFileWithUnknownFileNoDownload method
+ *
+ * @return void
+ */
+	public function testFileWithUnknownFileNoDownload() {
+		$currentUserAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
+		$_SERVER['HTTP_USER_AGENT'] = 'Some generic browser';
+
+		$response = $this->getMock('CakeResponse', array(
+			'header',
+			'type',
+			'download',
+			'_sendHeader',
+			'_setContentType',
+			'_isActive',
+			'_clearBuffer',
+			'_flushBuffer'
+		));
+
+		$response->expects($this->exactly(1))
+			->method('type')
+			->with('ini')
+			->will($this->returnValue(false));
+
+		$response->expects($this->never())
+			->method('download');
+
+		$response->file(CAKE . 'Test' . DS . 'test_app' . DS . 'Config' . DS . 'no_section.ini', array(
+			'download' => false
+		));
+
+		if ($currentUserAgent !== null) {
+			$_SERVER['HTTP_USER_AGENT'] = $currentUserAgent;
+		}
+	}
+
+/**
+ * testConnectionAbortedOnBuffering method
+ *
+ * @return void
+ */
+	public function testConnectionAbortedOnBuffering() {
+		$response = $this->getMock('CakeResponse', array(
+			'header',
+			'type',
+			'download',
+			'_sendHeader',
+			'_setContentType',
+			'_isActive',
+			'_clearBuffer',
+			'_flushBuffer'
+		));
+
+		$response->expects($this->any())
+			->method('type')
+			->with('css')
+			->will($this->returnArgument(0));
+
+		$response->expects($this->at(0))
+			->method('_isActive')
+			->will($this->returnValue(false));
+
+		$response->expects($this->once())->method('_clearBuffer');
+		$response->expects($this->never())->method('_flushBuffer');
+
+		$response->file(CAKE . 'Test' . DS . 'test_app' . DS . 'Vendor' . DS . 'css' . DS . 'test_asset.css');
+
+		$result = $response->send();
+		$this->assertNull($result);
+	}
+
+/**
+ * Test downloading files with UPPERCASE extensions.
+ *
+ * @return void
+ */
+	public function testFileUpperExtension() {
+		$response = $this->getMock('CakeResponse', array(
+			'header',
+			'type',
+			'download',
+			'_sendHeader',
+			'_setContentType',
+			'_isActive',
+			'_clearBuffer',
+			'_flushBuffer'
+		));
+
+		$response->expects($this->any())
+			->method('type')
+			->with('jpg')
+			->will($this->returnArgument(0));
+
+		$response->expects($this->at(0))
+			->method('_isActive')
+			->will($this->returnValue(true));
+
+		$response->file(CAKE . 'Test' . DS . 'test_app' . DS . 'Vendor' . DS . 'img' . DS . 'test_2.JPG');
+	}
+
+/**
+ * Test downloading files with extension not explicitly set.
+ *
+ * @return void
+ */
+	public function testFileExtensionNotSet() {
+		$response = $this->getMock('CakeResponse', array(
+			'header',
+			'type',
+			'download',
+			'_sendHeader',
+			'_setContentType',
+			'_isActive',
+			'_clearBuffer',
+			'_flushBuffer'
+		));
+
+		$response->expects($this->any())
+			->method('type')
+			->with('jpg')
+			->will($this->returnArgument(0));
+
+		$response->expects($this->at(0))
+			->method('_isActive')
+			->will($this->returnValue(true));
+
+		$response->file(CAKE . 'Test' . DS . 'test_app' . DS . 'Vendor' . DS . 'img' . DS . 'test_2.JPG');
 	}
 
 }

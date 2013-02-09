@@ -62,7 +62,7 @@ class ModelTaskTest extends CakeTestCase {
 	}
 
 /**
- * Setup a mock that has out mocked.  Normally this is not used as it makes $this->at() really tricky.
+ * Setup a mock that has out mocked. Normally this is not used as it makes $this->at() really tricky.
  *
  * @return void
  */
@@ -173,7 +173,7 @@ class ModelTaskTest extends CakeTestCase {
 		$this->Task->expects($this->any())->method('in')->will($this->onConsecutiveCalls(99, 1));
 		$this->Task->expects($this->once())->method('err');
 
-		$result = $this->Task->getName('test');
+		$this->Task->getName('test');
 	}
 
 /**
@@ -315,7 +315,7 @@ class ModelTaskTest extends CakeTestCase {
 		$this->Task->initValidations();
 		$this->Task->interactive = true;
 		$this->Task->expects($this->any())->method('in')
-			->will($this->onConsecutiveCalls('21', 'y', '17', 'n'));
+			->will($this->onConsecutiveCalls('24', 'y', '18', 'n'));
 
 		$result = $this->Task->fieldValidation('text', array('type' => 'string', 'length' => 10, 'null' => false));
 		$expected = array('notempty' => 'notempty', 'maxlength' => 'maxlength');
@@ -333,9 +333,9 @@ class ModelTaskTest extends CakeTestCase {
 		$this->Task->interactive = true;
 
 		$this->Task->expects($this->any())->method('in')
-			->will($this->onConsecutiveCalls('999999', '21', 'n'));
+			->will($this->onConsecutiveCalls('999999', '24', 'n'));
 
-		$this->Task->expects($this->at(7))->method('out')
+		$this->Task->expects($this->at(10))->method('out')
 			->with($this->stringContains('make a valid'));
 
 		$result = $this->Task->fieldValidation('text', array('type' => 'string', 'length' => 10, 'null' => false));

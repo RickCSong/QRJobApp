@@ -32,6 +32,7 @@ class CacheTest extends CakeTestCase {
  * @return void
  */
 	public function setUp() {
+		parent::setUp();
 		$this->_cacheDisable = Configure::read('Cache.disable');
 		Configure::write('Cache.disable', false);
 
@@ -45,6 +46,7 @@ class CacheTest extends CakeTestCase {
  * @return void
  */
 	public function tearDown() {
+		parent::tearDown();
 		Configure::write('Cache.disable', $this->_cacheDisable);
 		Cache::config('default', $this->_defaultCacheConfig['settings']);
 	}
@@ -60,6 +62,17 @@ class CacheTest extends CakeTestCase {
 		$this->assertEquals(Cache::config('new'), $results);
 		$this->assertTrue(isset($results['engine']));
 		$this->assertTrue(isset($results['settings']));
+	}
+
+/**
+ * testConfigInvalidEngine method
+ *
+ * @expectedException CacheException
+ * @return void
+ */
+	public function testConfigInvalidEngine() {
+		$settings = array('engine' => 'Imaginary');
+		Cache::config('imaginary', $settings);
 	}
 
 /**
@@ -123,7 +136,7 @@ class CacheTest extends CakeTestCase {
 			'serialize' => true,
 			'random' => 'wii'
 		));
-		$read = Cache::read('Test', 'invalid');
+		Cache::read('Test', 'invalid');
 	}
 
 /**
@@ -215,7 +228,8 @@ class CacheTest extends CakeTestCase {
 			'probability' => 100,
 			'engine' => 'File',
 			'isWindows' => DIRECTORY_SEPARATOR == '\\',
-			'mask' => 0664
+			'mask' => 0664,
+			'groups' => array()
 		);
 		$this->assertEquals($expected, Cache::settings('sessions'));
 
@@ -388,7 +402,7 @@ class CacheTest extends CakeTestCase {
 
 		Cache::delete('test_cache');
 
-		$global = Cache::settings();
+		Cache::settings();
 
 		Cache::set($_cacheSet);
 	}

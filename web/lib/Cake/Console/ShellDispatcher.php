@@ -48,12 +48,10 @@ class ShellDispatcher {
  */
 	public function __construct($args = array(), $bootstrap = true) {
 		set_time_limit(0);
+		$this->parseParams($args);
 
 		if ($bootstrap) {
 			$this->_initConstants();
-		}
-		$this->parseParams($args);
-		if ($bootstrap) {
 			$this->_initEnvironment();
 		}
 	}
@@ -134,16 +132,40 @@ class ShellDispatcher {
 			include_once CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'Console' . DS . 'Templates' . DS . 'skel' . DS . 'Config' . DS . 'core.php';
 			App::build();
 		}
-		require_once CAKE . 'Console' . DS . 'ConsoleErrorHandler.php';
-		$ErrorHandler = new ConsoleErrorHandler();
-		set_exception_handler(array($ErrorHandler, 'handleException'));
-		set_error_handler(array($ErrorHandler, 'handleError'), Configure::read('Error.level'));
+
+		$this->setErrorHandlers();
 
 		if (!defined('FULL_BASE_URL')) {
 			define('FULL_BASE_URL', 'http://localhost');
 		}
 
 		return true;
+	}
+
+/**
+ * Set the error/exception handlers for the console
+ * based on the `Error.consoleHandler`, and `Exception.consoleHandler` values
+ * if they are set. If they are not set, the default ConsoleErrorHandler will be
+ * used.
+ *
+ * @return void
+ */
+	public function setErrorHandlers() {
+		App::uses('ConsoleErrorHandler', 'Console');
+		$error = Configure::read('Error');
+		$exception = Configure::read('Exception');
+
+		$errorHandler = new ConsoleErrorHandler();
+		if (empty($error['consoleHandler'])) {
+			$error['consoleHandler'] = array($errorHandler, 'handleError');
+			Configure::write('Error', $error);
+		}
+		if (empty($exception['consoleHandler'])) {
+			$exception['consoleHandler'] = array($errorHandler, 'handleException');
+			Configure::write('Exception', $exception);
+		}
+		set_exception_handler($exception['consoleHandler']);
+		set_error_handler($error['consoleHandler'], Configure::read('Error.level'));
 	}
 
 /**
@@ -191,7 +213,8 @@ class ShellDispatcher {
 				return $Shell->main();
 			}
 		}
-		throw new MissingShellMethodException(array('shell' => $shell, 'method' => $arg));
+
+		throw new MissingShellMethodException(array('shell' => $shell, 'method' => $command));
 	}
 
 /**
@@ -251,7 +274,11 @@ class ShellDispatcher {
 		if (isset($params['working'])) {
 			$params['working'] = trim($params['working']);
 		}
-		if (!empty($params['working']) && (!isset($this->args[0]) || isset($this->args[0]) && $this->args[0]{0} !== '.')) {
+
+		if (!empty($params['working']) && (!isset($this->args[0]) || isset($this->args[0]) && $this->args[0][0] !== '.')) {
+			if ($params['working'][0] === '.') {
+				$params['working'] = realpath($params['working']);
+			}
 			if (empty($this->params['app']) && $params['working'] != $params['root']) {
 				$params['root'] = dirname($params['working']);
 				$params['app'] = basename($params['working']);
@@ -310,7 +337,7 @@ class ShellDispatcher {
 	}
 
 /**
- * Shows console help.  Performs an internal dispatch to the CommandList Shell
+ * Shows console help. Performs an internal dispatch to the CommandList Shell
  *
  * @return void
  */

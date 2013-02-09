@@ -24,10 +24,15 @@ require_once 'PHPUnit/TextUI/ResultPrinter.php';
  */
 class CakeBaseReporter extends PHPUnit_TextUI_ResultPrinter {
 
+/**
+ * Headers sent
+ *
+ * @var boolean
+ */
 	protected $_headerSent = false;
 
 /**
- * Array of request parameters.  Usually parsed GET params.
+ * Array of request parameters. Usually parsed GET params.
  *
  * @var array
  */
@@ -113,10 +118,20 @@ class CakeBaseReporter extends PHPUnit_TextUI_ResultPrinter {
 		return '';
 	}
 
+/**
+ * Print result
+ *
+ * @param PHPUnit_Framework_TestResult $result
+ */
 	public function printResult(PHPUnit_Framework_TestResult $result) {
 		$this->paintFooter($result);
 	}
 
+/**
+ * Paint result
+ *
+ * @param PHPUnit_Framework_TestResult $result
+ */
 	public function paintResult(PHPUnit_Framework_TestResult $result) {
 		$this->paintFooter($result);
 	}
@@ -201,6 +216,9 @@ class CakeBaseReporter extends PHPUnit_TextUI_ResultPrinter {
  */
 	public function endTest(PHPUnit_Framework_Test $test, $time) {
 		$this->numAssertions += $test->getNumAssertions();
+		if ($test->hasFailed()) {
+			return;
+		}
 		$this->paintPass($test, $time);
 	}
 

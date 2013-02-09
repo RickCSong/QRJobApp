@@ -54,7 +54,7 @@ class AclNode extends Model {
 /**
  * Retrieves the Aro/Aco node for this model
  *
- * @param mixed $ref Array with 'model' and 'foreign_key', model object, or string value
+ * @param string|array|Model $ref Array with 'model' and 'foreign_key', model object, or string value
  * @return array Node found in database
  * @throws CakeException when binding to a model that doesn't exist.
  */
@@ -124,7 +124,7 @@ class AclNode extends Model {
 			$ref = array('model' => $ref->name, 'foreign_key' => $ref->id);
 		} elseif (is_array($ref) && !(isset($ref['model']) && isset($ref['foreign_key']))) {
 			$name = key($ref);
-			list($plugin, $alias) = pluginSplit($name);
+			list(, $alias) = pluginSplit($name);
 
 			$model = ClassRegistry::init(array('class' => $name, 'alias' => $alias));
 
