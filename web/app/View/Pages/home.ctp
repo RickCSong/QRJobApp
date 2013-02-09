@@ -2,7 +2,7 @@
 
 <?php  $this->start('css'); ?>
   <!-- Supply additional CSS here -->
-  
+  <link rel="stylesheet" href="/css/mail.css">
 <?php $this->end('css'); ?>
 
 <br>
@@ -11,7 +11,7 @@
     <div class="span2">
       <div class="sidebar-nav">
 
-        <button id="new_mail" class="btn compose" data-toggle="dropdown">New</button>
+        <button id="new_mail" class="btn compose">New</button>
 
         <br><br>
 

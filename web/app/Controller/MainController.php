@@ -52,10 +52,17 @@ class MainController extends AppController {
  * @return void
  */
 	public function index() {
+		$this->set('name', 'Home');
 		$this->render('/Pages/home');
 	}
 
+	public function about() {
+		$this->set('name', 'About');
+		$this->render('/Pages/about');	
+	}
+
 	public function test() {
+		$this->set('test', 'PINK');
 		$this->render('/Pages/test');
 	}
 }
