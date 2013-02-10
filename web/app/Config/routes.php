@@ -34,6 +34,9 @@
 	// PHONE routes
 	Router::connect('/apply', array('controller' => 'phone', 'action' => 'apply'));
 
+	// TEST routes
+	Router::connect('/test', array('controller' => 'main', 'action' => 'test'));
+
 /**
  * Load all plugin routes.  See the CakePlugin documentation on
  * how to customize the loading of plugin routes.
