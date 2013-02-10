@@ -1,0 +1,72 @@
+table {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+li.job-item.selected {
+  background-color: #D9EDF7;
+}
+
+li.job-item.selected:hover {
+  background-color: #C1E1FF;
+}
+
+li.job-item:hover {
+  background-color: #EDEDED;
+}
+
+li.job-item {
+  padding: 3px 0;
+  margin-left: -15px;
+  font-size: 15px;
+  cursor:pointer;
+} 
+
+#new_job {
+  width: 100px;
+}
+
+.job-title {
+  font-size: 21px;
+  margin: 10px 0px 5px 0px; 
+}
+
+.job-source {
+  color: #009933;
+}
+
+.job-greytext {
+  color: #777777;
+}
+
+.job-content {
+  margin-top: 15px;
+}
+
+.job-heading {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: normal;
+  color: #222;
+  display: block;
+}
+
+.job-detail-item {
+  font-size: 13px;
+}
+
+.job-apply {
+  margin-top: 15px;
+  margin-left: auto;
+  margin-left: auto;
+}
+
+.job-apply>.job-heading {
+  font-weight: bold;
+  color: #d14836;
+  margin-bottom: 10px;
+}
+
