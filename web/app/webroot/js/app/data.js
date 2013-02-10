@@ -3,7 +3,7 @@
 define(
   function() {
     return {
-      folders: ["inbox", "later", "sent", "trash"],
+      folders: ["Inbox", "Later", "Sent", "Trash"],
       contacts: [
         {
           "id": "contact_342",
@@ -39,7 +39,7 @@ define(
           "folders": ["inbox", "later"],
           "important": "true",
           "time": 1334884976104,
-          "subject": "Neque porro quisquam velit!!",
+          "subject": "HELLLOOO!!!!!!",
           "message": "Curabitur sollicitudin mi eget sapien posuere semper. Fusce at neque et lacus luctus vulputate vehicula ac enim"
         },
         {
@@ -104,7 +104,6 @@ define(
         }
       ]
     };
-    return data;
   }
 );
 

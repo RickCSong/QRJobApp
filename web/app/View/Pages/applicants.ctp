@@ -11,10 +11,6 @@
     <div class="span2">
       <div class="sidebar-nav">
 
-        <button id="new_mail" class="btn compose">New</button>
-
-        <br><br>
-
         <ul id="folders" class="nav nav-list">
           <li class="folder-item selected" id="inbox"><i class="icon-folder-close"></i> Inbox</li>
           <li class="folder-item" id="later"><i class="icon-folder-close"></i> Later</li>
@@ -45,6 +41,18 @@
 
 <div id="compose_box" class="compose-box modal hide fade in"></div>
 <div id="move_to_selector" class="move-to-selector hide"></div>
+
+<div id="applicantModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">      
+  <div class="modal-header">
+    Job Applicant 
+  </div>
+  <div class="modal-body">
+    BLAH BLAH BLAH
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
 
 <?php $this->start('script'); ?>
 

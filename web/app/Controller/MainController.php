@@ -20,7 +20,6 @@
  */
 
 App::uses('AppController', 'Controller');
-App::import('Vendor', 'phpqrcode/qrlib');
 
 /**
  * Static content controller
@@ -37,14 +36,12 @@ class MainController extends AppController {
  *
  * @var string
  */
-	public $name = 'Pages';
-
-/**
- * This controller does not use a model
- *
- * @var array
- */
+	public $name = 'Main';
 	public $uses = array('User');
+
+	public function index() {
+		$this->redirect(array('controller' => 'main', 'action' => 'jobs'));
+	}
 
 	/**
 	 * Displays a view
@@ -52,7 +49,7 @@ class MainController extends AppController {
 	 * @param mixed What page to display
 	 * @return void
 	 */
-	public function index() {
+	public function jobs() {
 		$this->set('name', 'Jobs');
 		$this->render('/Pages/jobs');	
 	}
@@ -66,6 +63,23 @@ class MainController extends AppController {
 	public function applicants() {
 		$this->set('name', 'Applicants');
 		$this->render('/Pages/applicants');
+	}
+
+	public function download() {
+		$this->render('/Pages/download');
+	}
+
+	public function apply() {
+		if (!isset($this->params['url']['arg'])) {
+			$this->redirect(array('controller' => 'main', 'action' => 'download'));
+		}
+		else if (!isset($this->params['url']['arg2'])) {
+			$this->redirect(array('controller' => 'main', 'action' => 'download'));
+		} else {
+			$this->set('arg1', $this->params['url']['arg']); 
+			$this->set('arg2', $this->params['url']['arg2']);		    
+			$this->render('/Pages/apply');	
+		}
 	}
 
 	public function test() {

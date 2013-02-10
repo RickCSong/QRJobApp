@@ -17,7 +17,7 @@ define(
               {{formattedSubject}}\
             </span>\
             <span class="mailMessage">\
-              - <a href="#">{{formattedMessage}}</a>\
+              - <a href="#applicantModal" data-toggle="modal">{{formattedMessage}}</a>\
             </span>\
           </td>\
         </tr>\

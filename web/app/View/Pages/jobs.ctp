@@ -81,7 +81,18 @@
 		
 		<div class="job-apply"> 
 			<div class="job-heading">Apply Now</div>
-			<div id="qrcode"></div>
+			<a href="#qrModal" id="qrcode" data-toggle="modal"></a>
+		</div>
+
+		<div id="qrModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			
+			<div class="modal-body">
+				<div id="qrcodeLarge">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+			</div>
 		</div>
     </div>
   </div>
@@ -95,7 +106,13 @@
 	$('#qrcode').qrcode({
 		width: 80,
 		height: 80,
-		text	: "Ivan wants Rick's dick!"
+		text	: "http://qrapply-rickcsong.dotcloud.com/apply"
+	});	
+
+	$('#qrcodeLarge').qrcode({
+		width: 300,
+		height: 300,
+		text	: "http://qrapply-rickcsong.dotcloud.com/apply"
 	});	
 </script>
 
