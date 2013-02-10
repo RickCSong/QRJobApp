@@ -44,7 +44,7 @@ class MainController extends AppController {
  *
  * @var array
  */
-	public $uses = array();
+	public $uses = array('User');
 
 /**
  * Displays a view
@@ -63,8 +63,13 @@ class MainController extends AppController {
 	}
 
 	public function test() {
-		QRcode::png('code data text', 'filename.png'); // creates file 
-		$this->set('test', 'About');
+        $this->User->set('id', '2');
+        $test = $this->User->find('all');
+        $this->User->save();
+
+        $testUser = $this->User->find('all', array('conditions'=>array('User.id'=>1)));
+        $this->set('test', $testUser);
+
 		$this->render('/Pages/test');
 	}
 }
