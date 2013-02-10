@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS
     jobs_to_qualifications,
+    job_to_users,
     users,
     jobs,
     qualifications;
@@ -31,8 +32,15 @@ CREATE TABLE qualifications (
 CREATE TABLE jobs_to_qualifications (
     job_id INT NOT NULL,
     qualification_id INT NOT NULL,
-    CONSTRAINT fk_job_id FOREIGN KEY (job_id) REFERENCES jobs(id),
-    CONSTRAINT fk_qualification_id FOREIGN KEY (qualification_id) REFERENCES qualifications(id)
+    CONSTRAINT fk_jobstoqualifications_job_id FOREIGN KEY (job_id) REFERENCES jobs(id),
+    CONSTRAINT fk_jobstoqualifications_qualification_id FOREIGN KEY (qualification_id) REFERENCES qualifications(id)
+    );
+
+CREATE TABLE job_to_users (
+       job_id INT NOT NULL,
+       email VARCHAR(100),
+       CONSTRAINT fk_jobstousers_job_id FOREIGN KEY (job_id) REFERENCES jobs(id),
+       CONSTRAINT fk_jobstousers_email FOREIGN KEY (email) REFERENCES users(email)
     );
 
 INSERT INTO users(email, name, phone) values ('ivan@email.com', 'Ivan Van', '9119119111');

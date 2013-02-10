@@ -37,7 +37,7 @@ class PhoneController extends AppController {
  * @var string
  */
 	public $name = 'Phone';
-	public $uses = array('User');
+	public $uses = array('User', 'Job', 'JobToUser');
 
 	public function login() {
 		
@@ -52,7 +52,17 @@ class PhoneController extends AppController {
 			$this->set('job', $this->params['url']['job']);		    
 			$this->set('user', $this->params['url']['user']);
 			$this->set('timestamp', $this->params['url']['timestamp']);
-			
+	
+            $userParam = $this->params['url']['user'];
+            $jobParam = $this->params['url']['job'];
+
+            $user = $this->User->find('first', array('email' => array($userParam)));
+            $job = $this->Job->find('first', array('id' => array($jobParam)));
+
+            $jobToUser = $this->JobToUser->save(
+                array('JobToUser' => array('job_id' => $jobParam, 'email' => $userParam))
+            );
+
 			$this->render('/Pages/apply');	
 		}
 	}
