@@ -1,8 +1,8 @@
-<?php $this->assign('title', "QRapp.ly - Home"); ?>
+<?php $this->assign('title', "QRapp.ly - Applicants"); ?>
 
 <?php  $this->start('css'); ?>
   <!-- Supply additional CSS here -->
-  <link rel="stylesheet" href="/css/mail.css">
+  <link rel="stylesheet" href="/css/app/applicants.css">
 <?php $this->end('css'); ?>
 
 <br>
