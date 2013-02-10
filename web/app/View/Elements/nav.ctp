@@ -3,8 +3,8 @@
   	<?php
    		
   		$nav = array(
-		    'home',
-		    'about'
+		    'jobs',
+		    'applicants'
 		);
 
 	    // nav variable is passed from controllers

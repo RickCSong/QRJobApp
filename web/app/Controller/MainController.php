@@ -46,20 +46,26 @@ class MainController extends AppController {
  */
 	public $uses = array();
 
-/**
- * Displays a view
- *
- * @param mixed What page to display
- * @return void
- */
+	/**
+	 * Displays a view
+	 *
+	 * @param mixed What page to display
+	 * @return void
+	 */
 	public function index() {
-		$this->set('name', 'Home');
-		$this->render('/Pages/home');
+		$this->set('name', 'Jobs');
+		$this->render('/Pages/jobs');	
 	}
 
-	public function about() {
-		$this->set('name', 'About');
-		$this->render('/Pages/about');	
+	/**
+	 * Displays a view
+	 *
+	 * @param mixed What page to display
+	 * @return void
+	 */	
+	public function applicants() {
+		$this->set('name', 'Applicants');
+		$this->render('/Pages/applicants');
 	}
 
 	public function test() {
