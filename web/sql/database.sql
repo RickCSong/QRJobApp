@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS
+    jobs_to_qualifications,
     users,
     jobs,
-    qualifications,
-    jobs_to_qualifications;
+    qualifications;
 
 CREATE TABLE users (
     email VARCHAR(100) NOT NULL,
@@ -34,3 +34,8 @@ CREATE TABLE jobs_to_qualifications (
     CONSTRAINT fk_job_id FOREIGN KEY (job_id) REFERENCES jobs(id),
     CONSTRAINT fk_qualification_id FOREIGN KEY (qualification_id) REFERENCES qualifications(id)
     );
+
+INSERT INTO users(email, name, phone) values ('ivan@email.com', 'Ivan Van', '9119119111');
+
+INSERT INTO jobs(company, title) values ('Google', 'Software Engineer');
+INSERT INTO jobs(company, title) values ('Google', 'Hooker');
