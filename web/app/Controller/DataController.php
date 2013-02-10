@@ -91,4 +91,14 @@ class DataController extends AppController {
 		$this->set('data', $returnArray);
 		$this->set('_serialize', 'data');
     }
+
+    /*
+	public function applications() {
+		$json = "[{\"id\":\"1\",\"user_id\":\"1\",\"job_id\":\"1\",\"time\":\"1360472993\"},{\"id\":\"2\",\"user_id\":\"2\",\"job_id\":\"1\",\"time\":\"1360482993\"},{\"id\":\"3\",\"user_id\":\"3\",\"job_id\":\"1\",\"time\":\"1360492993\"},{\"id\":\"4\",\"user_id\":\"1\",\"job_id\":\"2\",\"time\":\"1360452993\"},{\"id\":\"5\",\"user_id\":\"2\",\"job_id\":\"2\",\"time\":\"1360462993\"},{\"id\":\"6\",\"user_id\":\"1\",\"job_id\":\"3\",\"time\":\"1360492993\"}]";
+		$data = json_decode($json);
+		$this->viewClass = 'Json';
+		$this->set('data', $data);
+		$this->set('_serialize', 'data');
+	}
+	*/
 }
