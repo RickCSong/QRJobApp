@@ -71,8 +71,10 @@ define(
         thisItem.title = thisJob.title;
         thisItem.company = thisJob.company;
         thisItem.location = thisJob.location;
+        thisItem.field = thisJob.field;
         thisItem.duration = thisJob.duration;
         thisItem.description = thisJob.description;
+        thisItem.area = thisJob.area;
 
         return thisItem;
       };

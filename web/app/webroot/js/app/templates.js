@@ -68,14 +68,14 @@ define(
       <div class="job-title">{{title}}</div>\
       <div class="job-source">{{location}}</div>\
       <div> \
-        <div class="job-greytext" style="display: inline-block;">Software Engineering</div>\
+        <div class="job-greytext" style="display: inline-block;">{{field}}</div>\
         <div style="display: inline-block;">·</div>\
         <div class="job-greytext" style="display: inline-block;">{{duration}}</div>\
       </div>\
       <div class="job-content">\
         <div class="job-heading">Job Description</div>\
         <p style="margin-left: 10px">\
-          Do you want to help Google build next-generation web applications like Gmail, Google Docs, Google Maps, and Google+?  As a Front End Engineer at Google, you will specialize in building responsive and elegant web UIs with AJAX and similar technologies.\
+            {{description}}\
         </p>\
       </div>\
       <div class="row-fluid">\
@@ -108,7 +108,7 @@ define(
         <div class="job-heading">Area</div>\
         <div class="detail-content offset">\
           <p style="margin-left: 10px">\
-            Google is and always will be an engineering company. We hire people with a broad set of technical skills who are ready to tackle some of technologys greatest challenges and make an impact on millions, if not billions, of users. At Google, engineers not only revolutionize search, they routinely work on massive scalability and storage solutions, large-scale applications and entirely new platforms for developers around the world. From AdWords to Chrome, Android to YouTube, Social to Local, Google engineers are changing the world one technological achievement after another.\
+            {{area}}\
           </p>\
         </div>\
       </div>\

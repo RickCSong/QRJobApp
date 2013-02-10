@@ -75,4 +75,18 @@ class MainController extends AppController {
 
 		$this->render('/Pages/test');
 	}
+
+    public function createjob() {
+        $this->Job->save(
+            array('Job' => array(
+                'title' => $this->params['form'],
+                'field' => 1,
+                'company' => 1,
+                'location' => 1,
+                'duration' => 1,
+                'description' => 1,
+                'area' => 1
+            ))
+        );
+    }
 }

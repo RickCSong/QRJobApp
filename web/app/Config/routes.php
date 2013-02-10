@@ -32,6 +32,7 @@
 	Router::connect('/jobs', array('controller' => 'main', 'action' => 'jobs'));
 	Router::connect('/applications', array('controller' => 'main', 'action' => 'applications'));
 	Router::connect('/download', array('controller' => 'main', 'action' => 'download'));
+	Router::connect('/createjob', array('controller' => 'main', 'action' => 'createJob'));
 
 	// PHONE routes
 	Router::connect('/apply', array('controller' => 'phone', 'action' => 'apply'));
