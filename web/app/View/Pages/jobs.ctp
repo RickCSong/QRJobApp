@@ -30,11 +30,58 @@
 	    <h3 id="myModalLabel">Create a New Job </h3>
 	  </div>
 	  <div class="modal-body">
-	    <p>One fine body…</p>
+	    <form id="createJobForm" class="form-horizontal" action="/createJob" method="POST">
+	    	<div class="control-group">
+			    <label class="control-label" for="inputCompany">Company</label>
+			    <div class="controls">
+			      <input type="text" id="inputCompany" placeholder="Company" name="company">
+			    </div>
+			</div>
+			<div class="control-group">
+			    <label class="control-label" for="inputTitle">Job Title</label>
+			    <div class="controls">
+			      <input type="text" id="inputTitle" placeholder="Title" name="title">
+			  	</div>
+			</div>
+			<div class="control-group">
+			    <label class="control-label" for="inputField">Job Field</label>
+			    <div class="controls">
+			      <input type="text" id="inputField" placeholder="Field" name="field">
+			  	</div>
+			</div>
+			<div class="control-group">
+			    <label class="control-label" for="inputLocation">Location</label>
+			    <div class="controls">
+			      <input type="text" id="inputLocation" placeholder="Location" name="location">
+			  	</div>
+			</div>
+			<div class="control-group">
+			    <label class="control-label">Duration</label>
+			    <div class="controls" name="duration">
+			      <select name="duration">
+					<option value="Full Time" selected>Full Time</option>
+					<option value="Internship">Internship</option>
+					<option value="Temp">Temp</option>
+				  </select>
+			  	</div>
+			</div>
+			<div class="control-group">
+			    <label class="control-label">Job Description</label>
+			    <div class="controls">
+			      <textarea rows="3" name="description"></textarea>
+			  	</div>
+			</div>
+			<div class="control-group">
+			    <label class="control-label">Company Area</label>
+			    <div class="controls">
+			      <textarea rows="3" name="area"></textarea>
+			  	</div>
+			</div>
+		</form>
 	  </div>
 	  <div class="modal-footer">
 	    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-	    <button class="btn btn-primary">Save changes</button>
+	    <button id="submitJobForm" class="btn btn-primary">Submit</button>
 	  </div>
 	</div>
   </div>
@@ -45,6 +92,10 @@
 <?php $this->start('script'); ?>
 <script type="text/javascript" src="/js/lib/jquery.qrcode.min.js"></script>
 <script type="text/javascript">
+	$("#submitJobForm").click(function() {
+		$("#createJobForm").submit();
+	})
+
 	$.when(
       $.ajax({
           url: '/data/applicants.json'
