@@ -1,11 +1,8 @@
 'use strict';
 
 define(
-  [
-    '/files/test.json',
-  ],
+  ['bootstrapData'],
   function(data) {
-    console.log(data);
     return {
       folders: ["Inbox", "Later", "Sent", "Trash"],
       contacts: [

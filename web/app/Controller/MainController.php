@@ -69,19 +69,6 @@ class MainController extends AppController {
 		$this->render('/Pages/download');
 	}
 
-	public function apply() {
-		if (!isset($this->params['url']['arg'])) {
-			$this->redirect(array('controller' => 'main', 'action' => 'download'));
-		}
-		else if (!isset($this->params['url']['arg2'])) {
-			$this->redirect(array('controller' => 'main', 'action' => 'download'));
-		} else {
-			$this->set('arg1', $this->params['url']['arg']); 
-			$this->set('arg2', $this->params['url']['arg2']);		    
-			$this->render('/Pages/apply');	
-		}
-	}
-
 	public function test() {
         $test = $this->Job->find('all');
         $this->set('test', $test);

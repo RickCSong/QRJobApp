@@ -20,6 +20,8 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+
+	Router::parseExtensions('json');
 /**
  * Here, we are connecting '/' (base path) to controller called 'Pages',
  * its action called 'display', and we pass a param to select the view file
@@ -33,6 +35,10 @@
 
 	// PHONE routes
 	Router::connect('/apply', array('controller' => 'phone', 'action' => 'apply'));
+
+	// DATA routes
+	Router::connect('/data/applicants', array('controller' => 'data', 'action' => 'applicants'));	
+	Router::connect('/data/jobs', array('controller' => 'data', 'action' => 'jobs'));
 
 	// TEST routes
 	Router::connect('/test', array('controller' => 'main', 'action' => 'test'));

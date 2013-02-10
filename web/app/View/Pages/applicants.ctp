@@ -47,25 +47,31 @@
 <script type="text/javascript" src="/js/lib/jquery.qrcode.min.js"></script>
 <!-- Supply additional javascript here -->
 <script type="text/javascript">
+  define('bootstrapData', function () {
+    return <?php echo "\"HELLO WORLD!!!\"" ?>;
+  });
+
   require(
     [
       'flight/lib/compose',
       'flight/lib/registry',
       'flight/lib/advice',
       'flight/lib/logger',
-      'flight/tools/debug/debug'
+      'flight/tools/debug/debug',
+      'bootstrapData',
     ],
 
-    function(compose, registry, advice, withLogging, debug) {
+    function(compose, registry, advice, withLogging, debug, data) {
+      console.log(data);
       debug.enable(true);
       compose.mixin(registry, [advice.withAdvice, withLogging]);
       require(['app/boot/page'], function(initialize) {
+
         initialize();
       });
     }
   );
 
-  $("a").live("click",function(e){e.stopPropagation();});
 </script>
 
 <?php $this->end('script'); ?>
