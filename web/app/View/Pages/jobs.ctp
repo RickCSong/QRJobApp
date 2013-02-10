@@ -11,7 +11,7 @@
     <div class="span2">
       <div class="sidebar-nav">
 
-        <button id="new_job" class="btn compose">New Job</button>
+        <button id="new_job" class="btn compose" data-toggle="modal" data-target="#createNewJob">New Job</button>
 
         <br><br>
 
@@ -23,8 +23,24 @@
     <div id="job-description" class="span10">
     	
     </div>
+
+    <div id="createNewJob" class="modal hide fade">
+	  <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	    <h3 id="myModalLabel">Create a New Job </h3>
+	  </div>
+	  <div class="modal-body">
+	    <p>One fine body…</p>
+	  </div>
+	  <div class="modal-footer">
+	    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+	    <button class="btn btn-primary">Save changes</button>
+	  </div>
+	</div>
   </div>
 </div>
+
+
 
 <?php $this->start('script'); ?>
 <script type="text/javascript" src="/js/lib/jquery.qrcode.min.js"></script>
