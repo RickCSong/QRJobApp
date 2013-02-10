@@ -37,7 +37,7 @@ class MainController extends AppController {
  * @var string
  */
 	public $name = 'Main';
-	public $uses = array('User');
+	public $uses = array('Job', 'User', 'Qualification');
 
 	public function index() {
 		$this->redirect(array('controller' => 'main', 'action' => 'jobs'));
@@ -83,12 +83,8 @@ class MainController extends AppController {
 	}
 
 	public function test() {
-        $this->User->set('id', '2');
-        $test = $this->User->find('all');
-        $this->User->save();
-
-        $testUser = $this->User->find('all', array('conditions'=>array('User.id'=>1)));
-        $this->set('test', $testUser);
+        $test = $this->Job->find('all');
+        $this->set('test', $test);
 
 		$this->render('/Pages/test');
 	}
