@@ -31,10 +31,6 @@
 			<div class="job-greytext" style="display: inline-block;">Software Engineering</div>
 			<div style="display: inline-block;">·</div>
 			<div class="job-greytext" style="display: inline-block;">Full-time</div>
-			<!--
-			<div style="display: inline-block;">·</div>
-			<div class="job-greytext" style="display: inline-block;">More than two weeks ago</div>
-			-->
 		</div>
 
 		<div class="job-content">

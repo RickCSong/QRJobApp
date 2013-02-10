@@ -24,6 +24,7 @@ define(
       };
 
       this.renderItems = function(items) {
+        console.log(items);
         return Mustache.render(templates.mailItem, {mailItems: items});
       };
 
@@ -48,6 +49,7 @@ define(
           return contact.id == itemData.contact_id
         })[0];
         thisItem.name = [thisContact.firstName, thisContact.lastName].join(' ');
+        thisItem.contactId = itemData.contact_id;
 
         var subj = itemData.subject;
         thisItem.formattedSubject = subj.length > 70 ? subj.slice(0, 70) + "..." : subj;

@@ -17,8 +17,13 @@ define(
               {{formattedSubject}}\
             </span>\
             <span class="mailMessage">\
-              - <a href="#applicantModal" data-toggle="modal">{{formattedMessage}}</a>\
+              - <a href="#{{id}}-collapse" data-toggle="collapse">Read More</a>\
             </span>\
+            <div id="{{id}}-collapse" class="collapse applicant-detail">\
+              <b>School:</b> Rice University<br>\
+              <b>Phone Number:</b> 214-986-1774<br>\
+              <a href="/files/{{contactId}}_resume.pdf" class="btn btn-small btn-primary" type="button" style="margin: 5px 0px 5px 0px;">View Resume</a>\
+            </div>\
           </td>\
         </tr>\
       {{/mailItems}}';

@@ -12,6 +12,11 @@ table {
   user-select: none;
 }
 
+.applicant-detail {
+  padding-left: 20px;
+  font-size:13px;
+}
+
 td.mailContact,
 span.mailSubject,
 span.mailMessage {
@@ -37,7 +42,7 @@ li.move-to-item.selected:hover {
 
 li.folder-item:hover,
 li.move-to-item:hover {
-  background-color: #EDEDED;
+  background-color: #EDEEDD;
 }
 
 li.folder-item,
@@ -100,3 +105,4 @@ div.hint {
   background-color: #FFFFFF;
   border: 1px solid;
 }
+

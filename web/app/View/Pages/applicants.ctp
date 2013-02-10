@@ -42,18 +42,6 @@
 <div id="compose_box" class="compose-box modal hide fade in"></div>
 <div id="move_to_selector" class="move-to-selector hide"></div>
 
-<div id="applicantModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">      
-  <div class="modal-header">
-    Job Applicant 
-  </div>
-  <div class="modal-body">
-    BLAH BLAH BLAH
-  </div>
-  <div class="modal-footer">
-    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-  </div>
-</div>
-
 <?php $this->start('script'); ?>
 
 <script type="text/javascript" src="/js/lib/jquery.qrcode.min.js"></script>
@@ -76,6 +64,8 @@
       });
     }
   );
+
+  $("a").live("click",function(e){e.stopPropagation();});
 </script>
 
 <?php $this->end('script'); ?>
