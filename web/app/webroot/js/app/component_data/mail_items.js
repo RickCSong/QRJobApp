@@ -24,16 +24,16 @@ define(
       };
 
       this.renderItems = function(items) {
-        console.log(items);
         return Mustache.render(templates.mailItem, {mailItems: items});
       };
 
       this.assembleItems = function(folder) {
         var items = [];
 
-        dataStore.mail.forEach(function(each) {
-          if (each.folders && each.folders.indexOf(folder) > -1) {
-            items.push(this.getItemForView(each));
+        dataStore.applications.forEach(function(each) {
+          each.folder = "inbox"
+          if (each.folder == folder) {
+            items.push(this.getItemForView(each));  
           }
         }, this);
 
@@ -41,21 +41,24 @@ define(
       };
 
       this.getItemForView = function(itemData) {
-        var thisItem, thisContact, msg
+        var thisItem, thisContact, thisJob, msg
 
-        thisItem = {id: itemData.id, important: itemData.important};
+        thisItem = {id: "application_" + itemData.id};
 
-        thisContact = dataStore.contacts.filter(function(contact) {
-          return contact.id == itemData.contact_id
+        thisContact = dataStore.users.filter(function(user) {
+          return user.id == itemData.user_id
         })[0];
+
+        thisJob = dataStore.jobs.filter(function(job) {
+          return job.id == itemData.job_id
+        })[0];
+
         thisItem.name = [thisContact.firstName, thisContact.lastName].join(' ');
-        thisItem.contactId = itemData.contact_id;
-
-        var subj = itemData.subject;
-        thisItem.formattedSubject = subj.length > 70 ? subj.slice(0, 70) + "..." : subj;
-
-        var msg = itemData.message;
-        thisItem.formattedMessage = msg.length > 70 ? msg.slice(0, 70) + "..." : msg;
+        thisItem.contactId = "contact_" + thisContact.id;
+        thisItem.school = thisContact.school;
+        thisItem.phone = thisContact.phone;
+        thisItem.email = thisContact.email;
+        thisItem.jobName = thisJob.company + " - " + thisJob.title;
 
         return thisItem;
       };

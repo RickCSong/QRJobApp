@@ -31,7 +31,7 @@ define(
 
       this.getSubject = function(type, relatedMailId) {
         var relatedMail = dataStore.mail.filter(function(each) {
-          return each.id ==  relatedMailId;
+          return each.id == relatedMailId;
         })[0];
 
         var subject = relatedMail && relatedMail.subject;

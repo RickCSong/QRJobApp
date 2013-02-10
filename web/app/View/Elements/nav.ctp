@@ -4,7 +4,7 @@
    		
   		$nav = array(
 		    'jobs',
-		    'applicants'
+		    'applications'
 		);
 
 	    // nav variable is passed from controllers

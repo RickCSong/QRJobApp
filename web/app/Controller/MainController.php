@@ -60,9 +60,9 @@ class MainController extends AppController {
 	 * @param mixed What page to display
 	 * @return void
 	 */	
-	public function applicants() {
-		$this->set('name', 'Applicants');
-		$this->render('/Pages/applicants');
+	public function applications() {
+		$this->set('name', 'Applications');
+		$this->render('/Pages/applications');
 	}
 
 	public function download() {

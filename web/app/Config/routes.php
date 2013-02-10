@@ -30,7 +30,7 @@
 	// MAIN routes
 	Router::connect('/', array('controller' => 'main', 'action' => 'index'));
 	Router::connect('/jobs', array('controller' => 'main', 'action' => 'jobs'));
-	Router::connect('/applicants', array('controller' => 'main', 'action' => 'applicants'));
+	Router::connect('/applications', array('controller' => 'main', 'action' => 'applications'));
 	Router::connect('/download', array('controller' => 'main', 'action' => 'download'));
 
 	// PHONE routes
@@ -40,6 +40,7 @@
 	Router::connect('/data/applicants', array('controller' => 'data', 'action' => 'applicants'));	
 	Router::connect('/data/applications', array('controller' => 'data', 'action' => 'applications'));	
 	Router::connect('/data/jobs', array('controller' => 'data', 'action' => 'jobs'));
+	Router::connect('/data/applications', array('controller' => 'data', 'action' => 'applications'));
 
 	// TEST routes
 	Router::connect('/test', array('controller' => 'main', 'action' => 'test'));

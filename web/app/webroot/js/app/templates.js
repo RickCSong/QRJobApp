@@ -14,14 +14,15 @@ define(
           <td class="span2 mailContact">{{name}}</td>\
           <td class="span8">\
             <span class="mailSubject">\
-              {{formattedSubject}}\
+              {{jobName}}\
             </span>\
             <span class="mailMessage">\
               - <a href="#{{id}}-collapse" data-toggle="collapse">Read More</a>\
             </span>\
             <div id="{{id}}-collapse" class="collapse applicant-detail">\
-              <b>School:</b> Rice University<br>\
-              <b>Phone Number:</b> 214-986-1774<br>\
+              <b>Phone Number:</b> {{phone}}<br>\
+              <b>E-mail:</b> {{email}}<br>\
+              <b>School:</b> {{school}}<br>\
               <a href="/files/{{contactId}}_resume.pdf" class="btn btn-small btn-primary" type="button" style="margin: 5px 0px 5px 0px;">View Resume</a>\
             </div>\
           </td>\
@@ -56,6 +57,9 @@ define(
         <li id="{{.}}" class="move-to-item">{{.}}</li>\
       {{/moveToItems}}\
       </ul>';
+
+    var jobApplication = 
+      'HELLO WORLD';
 
     return {
       mailItem: mailItem,

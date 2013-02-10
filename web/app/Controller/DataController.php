@@ -51,11 +51,21 @@ class DataController extends AppController {
         }
 
 		$this->set('data', $returnArray);
+		/*
+		$json = "[{\"id\":\"1\",\"firstName\":\"Ivan\",\"lastName\":\"Van\",\"phone\":\"911-911-9111\",\"email\":\"ivan@gmail.com\",\"school\":\"Rice University\",\"resume\":null},{\"id\":\"2\",\"firstName\":\"Rick\",\"lastName\":\"Song\",\"phone\":\"123-456-7890\",\"email\":\"rickcsong@gmail.com\",\"school\":\"Rice University\",\"resume\":null},{\"id\":\"3\",\"firstName\":\"Hassaan\",\"lastName\":\"Markhiani\",\"phone\":\"098-765-4321\",\"email\":\"hassaan@gmail.com\",\"school\":\"University of Texas\",\"resume\":null}]";
+		$data = json_decode($json);
+		$this->viewClass = 'Json';
+		$this->set('data', $data);
+		*/
 		$this->set('_serialize', 'data');
 	}
 
 	public function jobs() {
         $allJobs = $this->Job->find('all');
+        /*
+		$json = "[{\"id\":\"1\",\"title\":\"Software Engineer\",\"company\":\"Google\",\"location\":\"Mountain View, CA\",\"duration\":\"Full-time\",\"description\":null},{\"id\":\"2\",\"title\":\"Hardware Engineer\",\"company\":\"Apple\",\"location\":\"Cupertino, CA\",\"duration\":\"Full-time\",\"description\":null},{\"id\":\"3\",\"title\":\"Software Engineer Intern\",\"company\":\"Amazon\",\"location\":\"Seattle, WA\",\"duration\":\"Intern\",\"description\":null}]";
+		$data = json_decode($json);
+		*/
 		$this->viewClass = 'Json';
 
         $returnArray = array();
@@ -81,5 +91,4 @@ class DataController extends AppController {
 		$this->set('data', $returnArray);
 		$this->set('_serialize', 'data');
     }
-
 }

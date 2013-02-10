@@ -15,7 +15,7 @@
 
         <br><br>
 
-        <ul id="folders" class="nav nav-list">
+        <ul id="job-items" class="nav nav-list">
           <li class="job-item selected" id="inbox"><i class="icon-wrench"></i>Software Engineer</li>
           <li class="job-item" id="later"><i class="icon-wrench"></i>Web Developer</li>
           <li class="job-item" id="later"><i class="icon-shopping-cart"></i>Marketing Manager</li>
@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <div id="mail_panel" class="span10">
+    <div id="job_panel" class="span10">
     	<img src="https://www.google.com/images/logos/google_logo_41.png" style="margin-bottom: 15px">
 		<div class="job-title">Front End Software Engineer</div>
 		<div class="job-source">Mountain View, CA, USA</div>
@@ -77,39 +77,59 @@
 		
 		<div class="job-apply"> 
 			<div class="job-heading">Apply Now</div>
-			<a href="#qrModal" id="qrcode" data-toggle="modal"></a>
-		</div>
-
-		<div id="qrModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			
-			<div class="modal-body">
-				<div id="qrcodeLarge">
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-			</div>
+			<div id="qrcode"></div>
 		</div>
     </div>
   </div>
 </div>
 
 <?php $this->start('script'); ?>
-
 <script type="text/javascript" src="/js/lib/jquery.qrcode.min.js"></script>
-
 <script type="text/javascript">
 	$('#qrcode').qrcode({
-		width: 80,
-		height: 80,
+		width: 100,
+		height: 100,
 		text	: "http://qrapply-rickcsong.dotcloud.com/apply"
 	});	
 
-	$('#qrcodeLarge').qrcode({
-		width: 300,
-		height: 300,
-		text	: "http://qrapply-rickcsong.dotcloud.com/apply"
-	});	
+	$.when(
+      $.ajax({
+          url: '/data/applicants.json'
+      }),
+      $.ajax({
+          url: '/data/applications.json'
+      }),
+      $.ajax({
+          url: '/data/jobs.json'
+      })
+    ).then( function(users, applications, jobs){
+      define('bootstrapData', function () {
+        return {
+          users: users[0],
+          applications: applications[0],
+          jobs: jobs[0]
+        }
+      });
+      
+      require(
+        [
+          'flight/lib/compose',
+          'flight/lib/registry',
+          'flight/lib/advice',
+          'flight/lib/logger',
+          'flight/tools/debug/debug'
+        ],
+
+        function(compose, registry, advice, withLogging, debug) {
+          debug.enable(true);
+          compose.mixin(registry, [advice.withAdvice, withLogging]);
+
+          require(['app/boot/jobs'], function(initialize) {
+            initialize();
+          });
+        }
+      );
+  });
 </script>
 
 

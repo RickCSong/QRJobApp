@@ -1,17 +1,23 @@
 'use strict';
 
 define(
-  ['bootstrapData'],
+  [
+    'bootstrapData'
+  ],
   function(data) {
     return {
       folders: ["Inbox", "Later", "Sent", "Trash"],
+      users: data.users,
+      jobs: data.jobs,
+      applications: data.applications,
       contacts: [
         {
           "id": "contact_342",
           "firstName": "Rick",
           "lastName": "Song",
           "phone": "214-986-1774",
-          "email": "rickcsong@gmail.com"
+          "email": "rickcsong@gmail.com", 
+          "school": "Rice University"
         },
         {
           "id": "contact_377",
