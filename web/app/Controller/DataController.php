@@ -37,21 +37,49 @@ class DataController extends AppController {
  * @var string
  */
 	public $name = 'Main';
-	public $uses = array('Job', 'User', 'Qualification');
+	public $uses = array('Job', 'User', 'Application');
 	public $components = array('RequestHandler');
 
 	public function applicants() {
-		$data = array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5);
-		$this->viewClass = 'Json';
-		$this->set('data', $data);
+		$allUsers = $this->User->find('all');
+        $this->viewClass = 'Json';
+
+        $returnArray = array();
+
+        foreach ($allUsers as $user) {
+            array_push($returnArray, $user['User']);
+        }
+
+		$this->set('data', $returnArray);
 		$this->set('_serialize', 'data');
 	}
 
 	public function jobs() {
-		$data = array('a' => "POOP", 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5);
+        $allJobs = $this->Job->find('all');
 		$this->viewClass = 'Json';
-		$this->set('data', $data);
+
+        $returnArray = array();
+
+        foreach ($allJobs as $job) {
+            array_push($returnArray, $job['Job']);
+        }
+
+		$this->set('data', $returnArray);
 		$this->set('_serialize', 'data');
 	}
+
+    public function applications() {
+        $allApplications = $this->Application->find('all');
+		$this->viewClass = 'Json';
+
+        $returnArray = array();
+
+        foreach ($allApplications as $app) {
+            array_push($returnArray, $app['Application']);
+        }
+
+		$this->set('data', $returnArray);
+		$this->set('_serialize', 'data');
+    }
 
 }
