@@ -69,4 +69,18 @@ class PhoneController extends AppController {
 		}
 	}
 
+    public function jobInfo() {
+		$this->viewClass = 'Json';
+
+        $jobParam = $this->params['url']['job'];
+
+        $results = $this->Job->find('first', array(
+            'conditions' => array(
+                'Job.id' => $jobParam
+            )
+        ));
+
+		$this->set('data', $results);
+		$this->set('_serialize', 'data');
+    }
 }

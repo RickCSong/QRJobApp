@@ -35,12 +35,12 @@
 
 	// PHONE routes
 	Router::connect('/apply', array('controller' => 'phone', 'action' => 'apply'));
+	Router::connect('/jobinfo', array('controller' => 'phone', 'action' => 'jobInfo'));
 
 	// DATA routes
 	Router::connect('/data/applicants', array('controller' => 'data', 'action' => 'applicants'));	
 	Router::connect('/data/applications', array('controller' => 'data', 'action' => 'applications'));	
 	Router::connect('/data/jobs', array('controller' => 'data', 'action' => 'jobs'));
-	Router::connect('/data/applications', array('controller' => 'data', 'action' => 'applications'));
 
 	// TEST routes
 	Router::connect('/test', array('controller' => 'main', 'action' => 'test'));
