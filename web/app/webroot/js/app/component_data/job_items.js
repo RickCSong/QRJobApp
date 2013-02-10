@@ -52,7 +52,7 @@ define(
         $('#qrcode').qrcode({
           width: 100,
           height: 100,
-          text  : "http://qrapply-rickcsong.dotcloud.com/apply/" + data.job_id
+          text  : data.job_id
         }); 
       }
 
