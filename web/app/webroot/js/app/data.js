@@ -32,6 +32,13 @@ define(
           "lastName": "Markhiani",
           "phone": "214-240-8184",
           "email": "alexgchiu@gmail.com"
+        },
+        {
+          "id": "contact_400",
+          "firstName": "Ivan",
+          "lastName": "Van",
+          "phone": "214-240-8184",
+          "email": "ivan@gmail.com"
         }
       ],
       mail: [
