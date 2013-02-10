@@ -10,62 +10,77 @@ define(
   ],
 
   function(defineComponent, Mustache, dataStore, templates) {
-    return defineComponent(mailItems);
+    return defineComponent(jobItems);
 
-    function mailItems() {
+    function jobItems() {
 
-      this.defaultAttrs({
-        folder: 'inbox'
-      });
-
-      this.serveMailItems = function(ev, data) {
-        var folder = (data && data.folder) || this.attr.folder;
-        this.trigger("dataMailItemsServed", {markup: this.renderItems(this.assembleItems(folder))})
+      this.serveJobItems = function(ev, data) {
+        this.select('itemContainerSelector').html(this.renderItems(this.assembleItems()));
       };
 
       this.renderItems = function(items) {
-        return Mustache.render(templates.mailItem, {mailItems: items});
+        return Mustache.render(templates.jobItem, {jobItems: items});
       };
 
-      this.assembleItems = function(folder) {
+      this.assembleItems = function() {
         var items = [];
 
-        dataStore.applications.forEach(function(each) {
-          each.folder = "inbox"
-          if (each.folder == folder) {
-            items.push(this.getItemForView(each));  
-          }
+        dataStore.jobs.forEach(function(each) {
+          items.push(this.getItemForView(each));  
         }, this);
-        
+        items[0].selected = "selected";
         return items;
       };
 
       this.getItemForView = function(itemData) {
-        var thisItem, thisContact, thisJob, msg
+        var thisItem, thisJob, msg
 
-        thisItem = {id: "application_" + itemData.id};
-
-        thisContact = dataStore.users.filter(function(user) {
-          return user.id == itemData.user_id
-        })[0];
-
-        thisJob = dataStore.jobs.filter(function(job) {
-          return job.id == itemData.job_id
-        })[0];
-
-        thisItem.name = [thisContact.firstName, thisContact.lastName].join(' ');
-        thisItem.contactId = "contact_" + thisContact.id;
-        thisItem.school = thisContact.school;
-        thisItem.phone = thisContact.phone;
-        thisItem.email = thisContact.email;
-        thisItem.jobName = thisJob.company + " - " + thisJob.title;
+        thisItem = {id: "job_" + itemData.id};
+        thisItem.title = itemData.company + " - " + itemData.title;
 
         return thisItem;
       };
 
+
+      this.serveJobDescription = function(ev, data) {
+        this.select('descriptionContainerSelector').html(
+          this.renderDescription(
+            this.getDescription(data)
+          )
+        );
+
+        $('#qrcode').qrcode({
+          width: 100,
+          height: 100,
+          text  : "http://qrapply-rickcsong.dotcloud.com/apply/" + data.job_id
+        }); 
+      }
+
+      this.renderDescription = function(item) {
+        return Mustache.render(templates.jobDescription, item);
+      };
+
+      this.getDescription = function(itemData) {
+        var thisItem, thisJob;
+
+        thisItem = {id: "job_" + itemData.job_id};
+        thisJob = dataStore.jobs.filter(function(job) {
+          return itemData.job_id == job.id;
+        })[0];
+
+        thisItem.title = thisJob.title;
+        thisItem.company = thisJob.company;
+        thisItem.location = thisJob.location;
+        thisItem.duration = thisJob.duration;
+        thisItem.description = thisJob.description;
+
+        return thisItem;
+      };
+
+
       this.after("initialize", function() {
-        this.on("uiMailItemsRequested", this.serveMailItems);
-        this.on("dataMailItemsRefreshRequested", this.serveMailItems);
+        this.on("uiJobItemsRequested", this.serveJobItems);
+        this.on("uiJobDescriptionRequested", this.serveJobDescription);
       });
     }
   }

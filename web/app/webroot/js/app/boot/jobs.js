@@ -4,18 +4,18 @@ define(
 
   [
     'app/component_data/job_items',
-    'app/component_ui/job_items',
     'app/component_ui/job_folders',
   ],
 
   function(
     JobItemsData,
-    JobItemsUI,
     JobFoldersUI) {
 
     function initialize() {
-      //JobItemsData.attachTo(document);
-      //JobItemsUI.attachTo('#job-items', {itemContainerSelector: '#job_panel'});
+      JobItemsData.attachTo(document, {
+        itemContainerSelector: '#job-items',
+        descriptionContainerSelector: '#job-description'
+      });
       JobFoldersUI.attachTo('#job-items');
     }
 

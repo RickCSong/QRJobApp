@@ -23,13 +23,13 @@ define(
       });
 
       this.fetchJobItem = function(ev, data) {
-        console.log(data.selectedIds[0]);
-
-          //this.trigger('uiMailItemsRequested', {folder: data.selectedIds[0]});
+        this.trigger('uiJobDescriptionRequested', {job_id: data.selectedIds[0].substring(4)});
       }
 
       this.after('initialize', function() {
+        this.trigger('uiJobItemsRequested');
         this.on('uiJobItemSelectionChanged', this.fetchJobItem);
+        this.trigger('uiJobDescriptionRequested', {job_id: "job_1".substring(4)});
       });
     }
   }
