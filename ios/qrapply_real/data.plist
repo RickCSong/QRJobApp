@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>title</key>
+		<string>Google Software Engineer</string>
+		<key>image_name</key>
+		<string>Google.jpg</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Google Test Engineer</string>
+		<key>image_name</key>
+		<string>Google.jpg</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>TwitchTV Software Engineer</string>
+		<key>image_name</key>
+		<string>Twitch.png</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Microsoft Software Engineer</string>
+		<key>image_name</key>
+		<string>Microsoft.png</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Facebook Software Engineer</string>
+		<key>image_name</key>
+		<string>Facebook.png</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Square Software Engineer</string>
+		<key>image_name</key>
+		<string>Square.png</string>
+	</dict>
+</array>
+</plist>
